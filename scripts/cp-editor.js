@@ -1429,25 +1429,6 @@ H5PEditor.CoursePresentation.prototype.generateForm = function (elementParams, t
     // Hide all others
     self.showFields(elementFields, ['title', 'goToSlide', 'goToSlideType', 'invisible']);
   }
-  else {
-    var hideFields = ['title', 'goToSlide', 'goToSlideType', 'invisible'];
-
-    if (type === 'H5P.ContinuousText' || type === 'H5P.Audio') {
-      // Continuous Text or Go To Slide cannot be displayed as a button
-      hideFields.push('displayAsButton');
-      hideFields.push('buttonSize');
-    }
-    else if (type === "H5P.Shape") {
-      hideFields.push('solution');
-      hideFields.push('alwaysDisplayComments');
-      hideFields.push('backgroundOpacity');
-      hideFields.push('displayAsButton');
-      hideFields.push('buttonSize');
-    }
-
-    // Only display goToSlide field for goToSlide elements
-    self.hideFields(elementFields, hideFields);
-  }
 
   var element = {
     '$form': H5P.jQuery('<div/>')
