@@ -18,7 +18,7 @@ H5PEditor.CoursePresentation = function (parent, field, params, setValue) {
     expandBreadcrumbButtonLabel: H5PEditor.t('H5PEditor.InteraktivTavle', 'expandBreadcrumbButtonLabel'),
     collapseBreadcrumbButtonLabel: H5PEditor.t('H5PEditor.InteraktivTavle', 'collapseBreadcrumbButtonLabel')
   }, 'coursepresentation');
-  
+
   const isNewPresentation = params === undefined;
   if (isNewPresentation) {
     params = {
@@ -279,7 +279,7 @@ H5PEditor.CoursePresentation.prototype.appendTo = function ($wrapper) {
 
   // Add drag and drop menu bar.
   that.initializeDNB();
-
+  
   // Find BG selector fields and init slide selector
   var globalBackgroundField = H5PEditor.CoursePresentation.findField('globalBackgroundSelector', this.field.fields);
   var slideFields = H5PEditor.CoursePresentation.findField('slides', this.field.fields);
@@ -366,13 +366,13 @@ H5PEditor.CoursePresentation.prototype.appendTo = function ($wrapper) {
 /**
  * Sets the given ratio to every slide in the course presentation.
  * Will also change the default aspect ratio that is used for new slides.
- * 
- * @param {string} ratio 
+ *
+ * @param {string} ratio
  */
 H5PEditor.CoursePresentation.prototype.setRatio = function (ratio) {
   this.cp.slides.forEach(slide => slide.aspectRatio = ratio);
   this.cp.defaultAspectRatio = ratio;
-  this.cp.resize(); 
+  this.cp.resize();
 }
 
 /**
@@ -461,6 +461,18 @@ H5PEditor.CoursePresentation.prototype.initializeDNB = function () {
     height: 14.09
   };
 
+  const shapeButtonBaseArrowRight = {
+    title: '',
+    width: 10.00,
+    height: 5.00
+  };
+
+  const shapeButtonBaseArrowUp = {
+    title: '',
+    width: 5.00,
+    height: 10.00
+  };
+
   const shapeButtonBase1D = {
     params: {
       line: {
@@ -504,6 +516,66 @@ H5PEditor.CoursePresentation.prototype.initializeDNB = function () {
           type: 'circle'
         }
       }),
+      H5P.jQuery.extend(true, {}, shapeButtonBase, {
+        id: 'shape-triangle',
+        params: {
+          type: 'triangle',
+          svgpolygon: {
+            fillColor: 'rgb(255,255,255)',
+            borderColor: 'rgb(0,0,0)'
+          }
+        }
+      }),
+      H5P.jQuery.extend(true, {}, shapeButtonBase, {
+        id: 'shape-pentagon',
+        params: {
+          type: 'pentagon',
+          svgpolygon: {
+            fillColor: 'rgb(255,255,255)',
+            borderColor: 'rgb(0,0,0)'
+          }
+        }
+      }),
+      H5P.jQuery.extend(true, {}, shapeButtonBase, {
+        id: 'shape-hexagon',
+        params: {
+          type: 'hexagon',
+          svgpolygon: {
+            fillColor: 'rgb(255,255,255)',
+            borderColor: 'rgb(0,0,0)'
+          }
+        }
+      }),
+      H5P.jQuery.extend(true, {}, shapeButtonBase, {
+        id: 'shape-cube',
+        params: {
+          type: 'cube',
+          svg3d: {
+            fillColor: 'white',
+            borderColor: ''
+          }
+        }
+      }),
+      H5P.jQuery.extend(true, {}, shapeButtonBase, {
+        id: 'shape-cylinder',
+        params: {
+          type: 'cylinder',
+          svg3d: {
+            fillColor: 'white',
+            borderColor: ''
+          }
+        }
+      }),
+      H5P.jQuery.extend(true, {}, shapeButtonBase, {
+        id: 'shape-cone',
+        params: {
+          type: 'cone',
+          svg3d: {
+            fillColor: 'white',
+            borderColor: ''
+          }
+        }
+      }),
       H5P.jQuery.extend(true, {}, shapeButtonBase, shapeButtonBase1D, {
         id: 'shape-horizontal-line',
         params: {
@@ -514,6 +586,60 @@ H5PEditor.CoursePresentation.prototype.initializeDNB = function () {
         id: 'shape-vertical-line',
         params: {
           type: 'vertical-line'
+        }
+      }),
+      H5P.jQuery.extend(true, {}, shapeButtonBaseArrowRight, {
+        id: 'shape-long-arrow-right',
+        params: {
+          type: 'long-arrow-right',
+          svg: {
+            fillColor: ''
+          }
+        }
+      }),
+      H5P.jQuery.extend(true, {}, shapeButtonBaseArrowRight, {
+        id: 'shape-long-arrow-left',
+        params: {
+          type: 'long-arrow-left',
+          svg: {
+            fillColor: ''
+          }
+        }
+      }),
+      H5P.jQuery.extend(true, {}, shapeButtonBaseArrowUp, {
+        id: 'shape-long-arrow-up',
+        params: {
+          type: 'long-arrow-up',
+          svg: {
+            fillColor: ''
+          }
+        }
+      }),
+      H5P.jQuery.extend(true, {}, shapeButtonBaseArrowUp, {
+        id: 'shape-long-arrow-down',
+        params: {
+          type: 'long-arrow-down',
+          svg: {
+            fillColor: ''
+          }
+        }
+      }),
+      H5P.jQuery.extend(true, {}, shapeButtonBaseArrowRight, {
+        id: 'shape-arrows-alt-h',
+        params: {
+          type: 'arrows-alt-h',
+          svg: {
+            fillColor: ''
+          }
+        }
+      }),
+      H5P.jQuery.extend(true, {}, shapeButtonBaseArrowUp, {
+        id: 'shape-arrows-alt-v',
+        params: {
+          type: 'arrows-alt-v',
+          svg: {
+            fillColor: ''
+          }
         }
       })
     ]
@@ -1450,17 +1576,48 @@ H5PEditor.CoursePresentation.prototype.generateForm = function (elementParams, t
   // Show or hide button size dropdown depending on display as button checkbox
   element.$form.find('.field-name-displayAsButton').each(function () { // TODO: Use showWhen in semantics.json instead…
     var buttonSizeField = ns.$(this).parent().find('.field-name-buttonSize');
-
+    var buttonUseIconField = ns.$(this).parent().find('.field-name-useButtonIcon');
+    var buttonColorField = ns.$(this).parent().find('.field-name-buttonColor');
+    var buttonIconSelectField = ns.$(this).parent().find('.field-name-buttonIcon');
+console.log(buttonColorField)
     if (!ns.$(this).find("input")[0].checked) {
       buttonSizeField.addClass("h5p-hidden2");
+      buttonUseIconField.addClass("h5p-hidden2");
+      buttonColorField.addClass("h5p-hidden2");
+      buttonIconSelectField.addClass("h5p-hidden2");
     }
 
     ns.$(this).find("input").change(function (e) {
       if (e.target.checked) {
         buttonSizeField.removeClass("h5p-hidden2");
+        buttonUseIconField.removeClass("h5p-hidden2");
+        buttonColorField.removeClass("h5p-hidden2");
+        if(buttonUseIconField.find("input")[0].checked) {
+          buttonIconSelectField.removeClass("h5p-hidden2");
+      }
       }
       else {
         buttonSizeField.addClass("h5p-hidden2");
+        buttonUseIconField.addClass("h5p-hidden2");
+        buttonColorField.addClass("h5p-hidden2");
+        buttonIconSelectField.addClass("h5p-hidden2");
+      }
+    });
+  });
+
+  element.$form.find('.field-name-useButtonIcon').each(function () { // TODO: Use showWhen in semantics.json instead…
+    var buttonIconSelectField = ns.$(this).parent().find('.field-name-buttonIcon');
+
+    if (!ns.$(this).find("input")[0].checked) {
+      buttonIconSelectField.addClass("h5p-hidden2");
+    }
+
+    ns.$(this).find("input").change(function (e) {
+      if (e.target.checked) {
+        buttonIconSelectField.removeClass("h5p-hidden2");
+      }
+      else {
+        buttonIconSelectField.addClass("h5p-hidden2");
       }
     });
   });
@@ -1517,14 +1674,17 @@ H5PEditor.CoursePresentation.prototype.setImageSize = function (element, element
 
   // Avoid to small images
   var minSize = parseInt(element.$wrapper.css('font-size')) +
-                element.$wrapper.outerHeight() -
-                element.$wrapper.innerHeight();
+                element.$wrapper.outerWidth() -
+                element.$wrapper.innerWidth();
+
+  var fileRatio = fileParams.width / fileParams.height;
 
   // Use minSize
-  if (fileParams.width < minSize) {
-    fileParams.width = minSize;
+  if (fileParams.width < minSize){
+    fileParams.height = minSize * fileRatio;
   }
-  if (fileParams.height < minSize) {
+
+  if (fileParams.height < minSize){
     fileParams.height = minSize;
   }
 
@@ -1535,7 +1695,22 @@ H5PEditor.CoursePresentation.prototype.setImageSize = function (element, element
   }
 
   // Calculate new width
-  elementParams.width = (elementParams.height * (fileParams.width / fileParams.height)) / this.slideRatio;
+  elementParams.width = elementParams.height * fileRatio;
+  console.log("prenormalization");
+  console.log(elementParams);
+
+  if(elementParams.width > element.$wrapper.innerWidth()){
+    elementParams.height = (element.$wrapper.innerWidth() * elementParams.height) / elementParams.width;
+    elementParams.width = element.$wrapper.innerWidth();
+  }
+
+  if(elementParams.height > element.$wrapper.innerHeight()){
+    elementParams.width = (element.$wrapper.innerHeight() * elementParams.width) / elementParams.height;
+    elementParams.height = element.$wrapper.innerHeight();
+  }
+  
+  elementParams.width = (elementParams.width / element.$wrapper.innerWidth()) * 100;
+  elementParams.height = (elementParams.height / element.$wrapper.innerHeight()) * 100;
 };
 
 /**
@@ -1553,8 +1728,10 @@ H5PEditor.CoursePresentation.prototype.setVideoSize = function (elementParams, f
     fileParams.aspectRatio = '16:9';
   }
 
+  const cpRatio = this.cp.$current.innerWidth() / this.cp.$current.innerHeight();
+
   const ratioParts = String(fileParams.aspectRatio).split(':');
-  elementParams.height = (elementParams.width * (ratioParts.length === 1 ? fileParams.aspectRatio : (ratioParts[1] / ratioParts[0]))) * this.slideRatio;
+  elementParams.height = (elementParams.width * (ratioParts.length === 1 ? fileParams.aspectRatio : (ratioParts[1] / ratioParts[0]))) * cpRatio;
 };
 
 /**
