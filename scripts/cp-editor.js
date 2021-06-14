@@ -2246,6 +2246,9 @@ H5PEditor.CoursePresentation.prototype.showElementForm = function (element, $wra
   };
   this.on('formremove', handleFormremove);
 
+  // Store value of the image, if any, when opening the image-editor form, so we know later if it has changed
+  const imageFileInitial = elementParams.action.params.file;
+
   /**
    * The user is done editing, save and update the display.
    * @private
@@ -2287,13 +2290,26 @@ H5PEditor.CoursePresentation.prototype.showElementForm = function (element, $wra
           const containerWidth = parseFloat(containerStyle.width);
           const containerHeight = parseFloat(containerStyle.height);
           const imageAspectRatio = elementParams.action.params.file && (elementParams.action.params.file.width / elementParams.action.params.file.height);
+          const initialImageWidthPercent = (elementParams.action.params.file.width / containerWidth) * 100;
+          const initialImageHeightPercent = (elementParams.action.params.file.height / containerHeight) * 100;
           if(imageAspectRatio){
             if(elementParams.action.params.file.width < containerWidth * this.defaultElementWidthOfContainerInPercent/100) {
               if(elementParams.width == this.defaultElementWidthOfContainerInPercent) {
-                const initialImageWidthPercent = (elementParams.action.params.file.width / containerWidth) * 100;
-                const initialImageHeightPercent = (elementParams.action.params.file.height / containerHeight) * 100;
                 elementParams.width = initialImageWidthPercent;
                 elementParams.height = initialImageHeightPercent;
+              }
+            }
+          }
+          // If the image file has changed since opening the image-editor, we also change the size of the element container
+          if(imageFileInitial != undefined) {
+            const imageFileEnd = elementParams.action.params.file;
+            if(imageFileInitial.path != imageFileEnd.path) {
+              if(elementParams.action.params.file.width < containerWidth * this.defaultElementWidthOfContainerInPercent/100) {
+                elementParams.width = initialImageWidthPercent;
+                elementParams.height = initialImageHeightPercent;
+              } else {
+                elementParams.width = this.defaultElementWidthOfContainerInPercent;
+                elementParams.height = elementParams.width * (1 / imageAspectRatio) * trueSlideAspectRatio;
               }
             }
           }
