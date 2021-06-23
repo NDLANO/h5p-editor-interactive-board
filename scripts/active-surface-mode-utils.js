@@ -24,7 +24,7 @@ function createTransparentHotspotButton(id, answerType) {
   return {
     id,
     // @ts-expect-error H5PEditor is globally available
-    title: H5PEditor.t('H5PEditor.InteraktivTavle', `answerHotspot${capitalize(answerType)}`),
+    title: H5PEditor.t('H5PEditor.CoursePresentation', `answerHotspot${capitalize(answerType)}`),
     params: {
       ...hotspotParams,
       answerType,
