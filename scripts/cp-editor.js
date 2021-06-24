@@ -2306,9 +2306,9 @@ H5PEditor.CoursePresentation.prototype.showElementForm = function (element, $wra
             const numberOfParagraphs = text.split('<p>').length - 1;
             const numberOfListElements = text.split('<li>').length - 1;
             const elementAspectRatio = this.getDefaultElementAspectRatio('H5P.AdvancedText');
-            // console.log(`paragraphs and listE: ${numberOfParagraphs + numberOfListElements}`);
-            // console.log(lengthText);
-            // console.log(text);
+            console.log(`paragraphs and listE: ${numberOfParagraphs + numberOfListElements}`);
+            console.log(lengthText);
+            console.log(text);
 
             if(numberOfParagraphs + numberOfListElements == 1 && lengthText < 150) {
               elementParams.width = this.defaultElementWidthOfContainerInPercent;
@@ -2330,7 +2330,15 @@ H5PEditor.CoursePresentation.prototype.showElementForm = function (element, $wra
               elementParams.width = this.defaultElementWidthOfContainerInPercent;
               elementParams.height = (elementParams.width * trueSlideAspectRatio / elementAspectRatio);
             }
-            else if(numberOfParagraphs + numberOfListElements > 2) {
+            else if(numberOfParagraphs + numberOfListElements == 3 && lengthText < 150) {
+              elementParams.width = this.defaultElementWidthOfContainerInPercent;
+              elementParams.height = (elementParams.width * trueSlideAspectRatio / elementAspectRatio) / 2;
+            }
+            else if(numberOfParagraphs + numberOfListElements == 3 && lengthText >= 150) {
+              elementParams.width = this.defaultElementWidthOfContainerInPercent;
+              elementParams.height = (elementParams.width * trueSlideAspectRatio / elementAspectRatio);
+            }
+            else if(numberOfParagraphs + numberOfListElements > 3) {
               elementParams.width = this.defaultElementWidthOfContainerInPercent;
               elementParams.height = (elementParams.width * trueSlideAspectRatio / elementAspectRatio);
             }
