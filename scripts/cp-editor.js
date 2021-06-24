@@ -2302,45 +2302,44 @@ H5PEditor.CoursePresentation.prototype.showElementForm = function (element, $wra
         if(isAdvancedText) {
           if(elementParams.width == this.defaultElementWidthOfContainerInPercent) {
             const text = elementParams.action.params.text;
-            const lengthText = text.length;
-            const numberOfParagraphs = text.split('<p>').length - 1;
-            const numberOfListElements = text.split('<li>').length - 1;
-            const elementAspectRatio = this.getDefaultElementAspectRatio('H5P.AdvancedText');
-            console.log(`paragraphs and listE: ${numberOfParagraphs + numberOfListElements}`);
-            console.log(lengthText);
-            console.log(text);
+            if(text !== undefined) {
+              const lengthText = text.length;
+              const numberOfParagraphs = text.split('<p>').length - 1;
+              const numberOfListElements = text.split('<li>').length - 1;
+              const elementAspectRatio = this.getDefaultElementAspectRatio('H5P.AdvancedText');
 
-            if(numberOfParagraphs + numberOfListElements == 1 && lengthText < 150) {
-              elementParams.width = this.defaultElementWidthOfContainerInPercent;
-              elementParams.height = (elementParams.width * trueSlideAspectRatio / elementAspectRatio) / 4;
-            }
-            else if(numberOfParagraphs + numberOfListElements == 1 && lengthText >= 150 && lengthText < 300) {
-              elementParams.width = this.defaultElementWidthOfContainerInPercent;
-              elementParams.height = (elementParams.width * trueSlideAspectRatio / elementAspectRatio) / 2;
-            }
-            else if(numberOfParagraphs + numberOfListElements == 1 && lengthText >= 300) {
-              elementParams.width = this.defaultElementWidthOfContainerInPercent;
-              elementParams.height = (elementParams.width * trueSlideAspectRatio / elementAspectRatio);
-            }
-            else if(numberOfParagraphs + numberOfListElements == 2 && lengthText < 300 ) {
-              elementParams.width = this.defaultElementWidthOfContainerInPercent;
-              elementParams.height = (elementParams.width * trueSlideAspectRatio / elementAspectRatio) / 2;
-            }
-            else if(numberOfParagraphs + numberOfListElements == 2 && lengthText >= 300) {
-              elementParams.width = this.defaultElementWidthOfContainerInPercent;
-              elementParams.height = (elementParams.width * trueSlideAspectRatio / elementAspectRatio);
-            }
-            else if(numberOfParagraphs + numberOfListElements == 3 && lengthText < 150) {
-              elementParams.width = this.defaultElementWidthOfContainerInPercent;
-              elementParams.height = (elementParams.width * trueSlideAspectRatio / elementAspectRatio) / 2;
-            }
-            else if(numberOfParagraphs + numberOfListElements == 3 && lengthText >= 150) {
-              elementParams.width = this.defaultElementWidthOfContainerInPercent;
-              elementParams.height = (elementParams.width * trueSlideAspectRatio / elementAspectRatio);
-            }
-            else if(numberOfParagraphs + numberOfListElements > 3) {
-              elementParams.width = this.defaultElementWidthOfContainerInPercent;
-              elementParams.height = (elementParams.width * trueSlideAspectRatio / elementAspectRatio);
+              if(numberOfParagraphs + numberOfListElements == 1 && lengthText < 150) {
+                elementParams.width = this.defaultElementWidthOfContainerInPercent;
+                elementParams.height = (elementParams.width * trueSlideAspectRatio / elementAspectRatio) / 4;
+              }
+              else if(numberOfParagraphs + numberOfListElements == 1 && lengthText >= 150 && lengthText < 300) {
+                elementParams.width = this.defaultElementWidthOfContainerInPercent;
+                elementParams.height = (elementParams.width * trueSlideAspectRatio / elementAspectRatio) / 2;
+              }
+              else if(numberOfParagraphs + numberOfListElements == 1 && lengthText >= 300) {
+                elementParams.width = this.defaultElementWidthOfContainerInPercent;
+                elementParams.height = (elementParams.width * trueSlideAspectRatio / elementAspectRatio);
+              }
+              else if(numberOfParagraphs + numberOfListElements == 2 && lengthText < 300 ) {
+                elementParams.width = this.defaultElementWidthOfContainerInPercent;
+                elementParams.height = (elementParams.width * trueSlideAspectRatio / elementAspectRatio) / 2;
+              }
+              else if(numberOfParagraphs + numberOfListElements == 2 && lengthText >= 300) {
+                elementParams.width = this.defaultElementWidthOfContainerInPercent;
+                elementParams.height = (elementParams.width * trueSlideAspectRatio / elementAspectRatio);
+              }
+              else if(numberOfParagraphs + numberOfListElements == 3 && lengthText < 150) {
+                elementParams.width = this.defaultElementWidthOfContainerInPercent;
+                elementParams.height = (elementParams.width * trueSlideAspectRatio / elementAspectRatio) / 2;
+              }
+              else if(numberOfParagraphs + numberOfListElements == 3 && lengthText >= 150) {
+                elementParams.width = this.defaultElementWidthOfContainerInPercent;
+                elementParams.height = (elementParams.width * trueSlideAspectRatio / elementAspectRatio);
+              }
+              else if(numberOfParagraphs + numberOfListElements > 3) {
+                elementParams.width = this.defaultElementWidthOfContainerInPercent;
+                elementParams.height = (elementParams.width * trueSlideAspectRatio / elementAspectRatio);
+              }
             }
           }
         }
