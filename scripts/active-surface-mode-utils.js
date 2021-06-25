@@ -37,7 +37,7 @@ function createGoToSummaryPageHotspotButton() {
   return {
     id: "summary-page-button",
     // @ts-expect-error H5PEditor is globally available
-    title: H5PEditor.t('H5PEditor.InteraktivTavle', `goToSummarySlide`),
+    title: H5PEditor.t('H5PEditor.CoursePresentation', `goToSummarySlide`),
     params: {
       ...hotspotParams,
       goToSlideType: "go-to-summary-slide",
