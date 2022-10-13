@@ -29,3 +29,13 @@ export function getLibraryDependencyVersion(libraryName) {
 
   return `${dependency.majorVersion}.${dependency.minorVersion}`;
 }
+
+/**
+ * @param {string} translationKey 
+ * @param {unknown[]} rest
+ * @returns {string}
+ */
+export function t(translationKey, ...rest) {
+  // @ts-expect-error H5PEditor is globally available
+  return H5PEditor.t('H5PEditor.NDLAInteractiveBoard', translationKey, ...rest);
+}
