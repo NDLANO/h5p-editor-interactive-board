@@ -1,3 +1,5 @@
+import { t } from './utils';
+
 export default (function ($, EventDispatcher) {
 
   /**
