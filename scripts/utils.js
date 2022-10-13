@@ -31,11 +31,16 @@ export function getLibraryDependencyVersion(libraryName) {
 }
 
 /**
- * @param {string} translationKey 
- * @param {unknown[]} rest
- * @returns {string}
+ * Translate text strings.
+ * 
+ * @see https://github.com/boyum/h5p-types/blob/v1.1.0/src/types/H5PEditorObject.ts#L34
+ *
+ * @param {string} translationKey Translation string identifier.
+ * @param {Record<`:${string}`, string>} [vars] Placeholders and values to replace in the text.
+ *
+ * @returns Translated string, or a default text if the translation is missing.
  */
-export function t(translationKey, ...rest) {
+  export function t(translationKey, vars) {
   // @ts-expect-error H5PEditor is globally available
-  return H5PEditor.t('H5PEditor.NDLAInteractiveBoard', translationKey, ...rest);
+  return H5PEditor.t('H5PEditor.NDLAInteractiveBoard', translationKey, vars);
 }
