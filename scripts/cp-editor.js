@@ -268,8 +268,6 @@ H5PEditor.NDLAInteractiveBoard.prototype.addElement = function (library, options
   const trueAspectRatio = this.getTrueSlideAspectRatio();
   elementParams.height = elementParams.height || elementParams.width * trueAspectRatio / elementAspectRatio;
 
-  console.log("size", elementParams.width, elementParams.height)
-  
   if (slideParams.elements === undefined) {
     // No previous elements
     slideParams.elements = [elementParams];

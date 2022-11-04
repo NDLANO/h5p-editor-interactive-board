@@ -16,7 +16,7 @@ export const hotspotParams = {
  * Parse `library.json` to find version number of given dependency
  *
  * @param {string} libraryName
- * @return {string}
+ * @return {string | undefined}
  */
 export function getLibraryDependencyVersion(libraryName) {
   const dependency = libraryJson.preloadedDependencies.find(
