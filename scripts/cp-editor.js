@@ -232,11 +232,20 @@ H5PEditor.NDLAInteractiveBoard.prototype.addElement = function (library, options
     }
 
     const trueAspectRatio = this.getTrueSlideAspectRatio();
+
+    const isAnswerHotspot = ["yes-button", "no-button", "summary-page-button"].includes(options.id);
+    const isShape = libraryName === 'H5P.NDLAShape'
+
     const hasSizeOverride = options.width && options.height;
     if (hasSizeOverride && !options.displayAsButton) {
       // Use specified size
       elementParams.width = options.width;
       elementParams.height = options.height * trueAspectRatio;
+    } else if (!hasSizeOverride && (isAnswerHotspot || isShape)) {
+      const size = 30;
+
+      elementParams.width = size;
+      elementParams.height = size * trueAspectRatio;
     }
 
     if (options.displayAsButton) {
@@ -259,6 +268,8 @@ H5PEditor.NDLAInteractiveBoard.prototype.addElement = function (library, options
   const trueAspectRatio = this.getTrueSlideAspectRatio();
   elementParams.height = elementParams.height || elementParams.width * trueAspectRatio / elementAspectRatio;
 
+  console.log("size", elementParams.width, elementParams.height)
+  
   if (slideParams.elements === undefined) {
     // No previous elements
     slideParams.elements = [elementParams];
