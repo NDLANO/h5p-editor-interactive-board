@@ -146,13 +146,16 @@ H5PEditor.NDLAInteractiveBoard.prototype.updateElementSizes = function (heightRa
  * Compute true slide aspect ratio,
  * based on set aspect ratio and footer height
  * 
+ * @param {number} currentSlideIndex
+ * 
  * @returns {number}
  */
-H5PEditor.NDLAInteractiveBoard.prototype.getTrueSlideAspectRatio = function () {
-  const $slideElement = this.cp.$wrapper.find(".h5p-slide")
-  const { width, height } = $slideElement.get(0).getBoundingClientRect()
+H5PEditor.NDLAInteractiveBoard.prototype.getTrueSlideAspectRatio = function (currentSlideIndex) {
+  const $slideElement = this.cp.$wrapper.find(".h5p-slide");
 
-  return width / height
+  const { width, height } = $slideElement.get(currentSlideIndex).getBoundingClientRect();
+
+  return width / height;
 }
 
 /**
@@ -193,6 +196,8 @@ H5PEditor.NDLAInteractiveBoard.prototype.addElement = function (library, options
   }
 
   const elementAspectRatio = this.getDefaultElementAspectRatio(libraryName);
+  const slideIndex = this.cp.$current.index();
+  const trueAspectRatio = this.getTrueSlideAspectRatio(slideIndex);
 
   const isNewElement = !elementParams;
   if (isNewElement) {
@@ -231,8 +236,6 @@ H5PEditor.NDLAInteractiveBoard.prototype.addElement = function (library, options
       }
     }
 
-    const trueAspectRatio = this.getTrueSlideAspectRatio();
-
     const isAnswerHotspot = ["yes-button", "no-button", "summary-page-button"].includes(options.id);
     const isShape = libraryName === 'H5P.NDLAShape'
 
@@ -262,10 +265,8 @@ H5PEditor.NDLAInteractiveBoard.prototype.addElement = function (library, options
     ...instanceParameters,
   };
   
-  const slideIndex = this.cp.$current.index();
   const slideParams = this.params.slides[slideIndex];
 
-  const trueAspectRatio = this.getTrueSlideAspectRatio();
   elementParams.height = elementParams.height || elementParams.width * trueAspectRatio / elementAspectRatio;
 
   if (slideParams.elements === undefined) {
@@ -2302,8 +2303,10 @@ H5PEditor.NDLAInteractiveBoard.prototype.showElementForm = function (element, $w
     else {
       // Wait until form is actually closed until calculating aspect ratio based on wrapper size
       window.requestAnimationFrame(() => {
+        const slideIndex = this.cp.$current.index();
+
         const defaultElementAspectRatio = this.getDefaultElementAspectRatio(machineName);
-        const trueSlideAspectRatio = this.getTrueSlideAspectRatio();
+        const trueSlideAspectRatio = this.getTrueSlideAspectRatio(slideIndex);
         const elementHasDefaultSize = elementParams.width === this.defaultElementWidthOfContainerInPercent && elementParams.height === elementParams.width * trueSlideAspectRatio / defaultElementAspectRatio;
 
         const isImage = machineName === 'H5P.Image';
