@@ -2065,6 +2065,21 @@ H5PEditor.NDLAInteractiveBoard.prototype.processElement = function (elementParam
       params: elementParams
     };
   }
+  else if (type === 'H5P.NDLAShape') {
+    // Add title workaround for subcontents that were hardcoded.
+    if (elementParams.answerType === 'true') {
+      elementParams.customTitle = `${t('answerHotspot')} (${t('answerHotspotTrue')})`;
+    }
+    else if (elementParams.answerType === 'false') {
+      elementParams.customTitle = `${t('answerHotspot')} (${t('answerHotspotFalse')})`;
+    }
+    else if (elementParams.goToSlideType === 'go-to-summary-slide') {
+      elementParams.customTitle = t('goToSummarySlide');
+    }
+    else if (elementParams.showAsHotspot) {
+      elementParams.customTitle = t('goToSlide');
+    }
+  }
 
   if (elementParams.pasted) {
     if (type === 'H5P.ContinuousText') {
@@ -2452,6 +2467,9 @@ H5PEditor.NDLAInteractiveBoard.prototype.showElementForm = function (element, $w
   if (elementParams.action === undefined) {
     customTitle = t('goToSlide');
     customIconId = 'gotoslide';
+  }
+  else if (elementParams.customTitle) {
+    customTitle = elementParams.customTitle;
   }
 
   // Open a new form pane with the element form
