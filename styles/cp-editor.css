@@ -224,7 +224,7 @@
 }
 
 .editor.h5p-coursepresentation .h5p-hotspot-answer--true::before {
-  border-color: hsla(164, 95%, 43%, 1);
+  border-color: hsla(136, 31%, 39%, 1);
 }
 
 .editor.h5p-coursepresentation .h5p-hotspot-answer--false::before {
