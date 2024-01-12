@@ -1,16 +1,29 @@
-// @ts-check
+/**
+ * Show fields by removing a `hidden` class
+ * @param  {...H5P.jQuery} fields
+ */
+function showFields(...fields) {
+  const hiddenClass = 'h5p-hidden2';
+  fields.forEach((field) => field.removeClass(hiddenClass));
+}
 
-/** @typedef {any} jQuery */
+/**
+ * Hide fields by adding a `hidden` class
+ * @param  {...H5P.jQuery} fields
+ */
+function hideFields(...fields) {
+  const hiddenClass = 'h5p-hidden2';
+  fields.forEach((field) => field.addClass(hiddenClass));
+}
 
 /**
  * Show and hide fields based on the `displayAsButton` setting
- *
- * @param {jQuery} element
- * @param {jQuery} $
+ * @param {H5P.jQuery} element
+ * @param {H5P.jQuery} $
  */
 export function alterDisplayAsButtonSemantics(element, $) {
   const $displayAsButtonFields = element.$form.find(
-    ".field-name-displayAsButton"
+    '.field-name-displayAsButton'
   );
 
   // Show or hide button size dropdown depending on display as button checkbox
@@ -22,13 +35,13 @@ export function alterDisplayAsButtonSemantics(element, $) {
     (index, element) => {
       // TODO: Use showWhen in semantics.json instead
       const $displayAsButtonField = $(element);
-      const $displayAsButtonCheckbox = $displayAsButtonField.find("input");
+      const $displayAsButtonCheckbox = $displayAsButtonField.find('input');
       const $parent = $displayAsButtonField.parent();
 
-      const buttonSizeField = $parent.find(".field-name-buttonSize");
-      const buttonUseIconField = $parent.find(".field-name-useButtonIcon");
-      const buttonColorField = $parent.find(".field-name-buttonColor");
-      const buttonIconSelectField = $parent.find(".field-name-buttonIcon");
+      const buttonSizeField = $parent.find('.field-name-buttonSize');
+      const buttonUseIconField = $parent.find('.field-name-useButtonIcon');
+      const buttonColorField = $parent.find('.field-name-buttonColor');
+      const buttonIconSelectField = $parent.find('.field-name-buttonIcon');
 
       const displayElementAsButton = $displayAsButtonCheckbox[0].checked;
       if (!displayElementAsButton) {
@@ -45,10 +58,11 @@ export function alterDisplayAsButtonSemantics(element, $) {
         if (checkbox.checked) {
           showFields(buttonSizeField, buttonUseIconField, buttonColorField);
 
-          if (buttonUseIconField.find("input")[0].checked) {
+          if (buttonUseIconField.find('input')[0].checked) {
             showFields(buttonIconSelectField);
           }
-        } else {
+        }
+        else {
           hideFields(
             buttonSizeField,
             buttonUseIconField,
@@ -61,22 +75,27 @@ export function alterDisplayAsButtonSemantics(element, $) {
   );
 }
 
+/**
+ *
+ * @param element
+ * @param $
+ */
 export function alterDisplayAsHotspotSemantics(element, $) {
-  const $hotspotButtonFields = element.$form.find(".field-name-showAsHotspot");
+  const $hotspotButtonFields = element.$form.find('.field-name-showAsHotspot');
 
   $hotspotButtonFields.each((index, element) => {
     const $hotspotButtonField = $(element);
     const $parent = $hotspotButtonField.parent();
 
-    const $displayAsButtonField = $parent.find(".field-name-displayAsButton");
-    const $displayAsHotspotCheckbox = $hotspotButtonField.find("input");
+    const $displayAsButtonField = $parent.find('.field-name-displayAsButton');
+    const $displayAsHotspotCheckbox = $hotspotButtonField.find('input');
 
     const displayElementAsHotspot =
       $displayAsHotspotCheckbox.get(0) &&
       $displayAsHotspotCheckbox.get(0).checked;
-    
+
     hideFields($hotspotButtonField);
-    
+
     if (displayElementAsHotspot) {
       hideFields($displayAsButtonField);
     }
@@ -85,7 +104,8 @@ export function alterDisplayAsHotspotSemantics(element, $) {
       const checkbox = e.target;
       if (checkbox.checked) {
         hideFields($displayAsButtonField);
-      } else {
+      }
+      else {
         showFields($displayAsButtonField);
       }
     });
@@ -94,19 +114,57 @@ export function alterDisplayAsHotspotSemantics(element, $) {
 
 /**
  * @param {*} element
- * @param {jQuery} $
+ * @param {H5P.jQuery} $
  */
 export function alterHotspotGotoSemantics(element, $) {
-  const $hotspotButtonFields = element.$form.find(".field-name-showAsHotspot");
+  /**
+   * @param {"specified" | "next" | "previous" | "information-dialog"} hotspotType
+   * @param {H5P.jQuery} $parent
+   */
+  function updateHotspotConnectedFields(hotspotType, $parent) {
+    const findField = (/** @type {string} */ name) => $parent.find(`.field-name-${name}`);
+
+    const $specificSlideInput = findField('goToSlide');
+    const $dialogAudioInput = findField('dialogAudio');
+    const $dialogHeaderTypeGroup = $parent.find(
+      '.h5p-radio-selector-dialogHeaderContent'
+    );
+    const $dialogContentInput = findField('dialogContent');
+
+    const hotspotConnectedFields = [
+      $specificSlideInput,
+      $dialogContentInput,
+      $dialogAudioInput,
+      $dialogHeaderTypeGroup,
+    ];
+
+    showFields(...hotspotConnectedFields);
+
+    const isGoToSpecifiedSlide = hotspotType === 'specified';
+    if (!isGoToSpecifiedSlide) {
+      hideFields($specificSlideInput);
+    }
+
+    const isDialogWindow = hotspotType === 'information-dialog';
+    if (!isDialogWindow) {
+      hideFields(
+        $dialogAudioInput,
+        $dialogContentInput,
+        $dialogHeaderTypeGroup
+      );
+    }
+  }
+
+  const $hotspotButtonFields = element.$form.find('.field-name-showAsHotspot');
 
   $hotspotButtonFields.each((index, elm) => {
     const $hotspotButtonField = $(elm);
     const $parent = $hotspotButtonField.parent();
 
-    const $hotspotTypeSelect = $parent.find(".field-name-goToSlideType");
+    const $hotspotTypeSelect = $parent.find('.field-name-goToSlideType');
     const currentType =
       ($hotspotTypeSelect.get(0) && $hotspotTypeSelect.get(0).value) ||
-      $hotspotTypeSelect.find("[selected]").attr("value");
+      $hotspotTypeSelect.find('[selected]').attr('value');
 
     if (!currentType) {
       return;
@@ -122,62 +180,4 @@ export function alterHotspotGotoSemantics(element, $) {
       updateHotspotConnectedFields(currentType, $parent);
     });
   });
-
-  /**
-   * @param {"specified" | "next" | "previous" | "information-dialog"} hotspotType
-   * @param {jQuery} $parent
-   */
-  function updateHotspotConnectedFields(hotspotType, $parent) {
-    const findField = (/** @type {string} */ name) => $parent.find(`.field-name-${name}`);
-    
-    const $specificSlideInput = findField("goToSlide");
-    const $dialogAudioInput = findField("dialogAudio");
-    const $dialogHeaderTypeGroup = $parent.find(
-      ".h5p-radio-selector-dialogHeaderContent"
-    );
-    const $dialogContentInput = findField("dialogContent");
-
-    const hotspotConnectedFields = [
-      $specificSlideInput,
-      $dialogContentInput,
-      $dialogAudioInput,
-      $dialogHeaderTypeGroup,
-    ];
-
-    showFields(...hotspotConnectedFields);
-
-    const isGoToSpecifiedSlide = hotspotType === "specified";
-    if (!isGoToSpecifiedSlide) {
-      hideFields($specificSlideInput);
-    }
-
-    const isDialogWindow = hotspotType === "information-dialog";
-    if (!isDialogWindow) {
-      hideFields(
-        $dialogAudioInput,
-        $dialogContentInput,
-        $dialogHeaderTypeGroup
-      );
-    }
-  }
-}
-
-/**
- * Show fields by removing a `hidden` class
- *
- * @param  {...jQuery} fields
- */
-function showFields(...fields) {
-  const hiddenClass = "h5p-hidden2";
-  fields.forEach((field) => field.removeClass(hiddenClass));
-}
-
-/**
- * Hide fields by adding a `hidden` class
- *
- * @param  {...jQuery} fields
- */
-function hideFields(...fields) {
-  const hiddenClass = "h5p-hidden2";
-  fields.forEach((field) => field.addClass(hiddenClass));
 }

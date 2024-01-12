@@ -1,21 +1,20 @@
-import SlideSelector from './slide-selector';
-import AspectRatioSelector from './aspect-ratio-selector';
-import { getLibraryDependencyVersion, hotspotParams, t } from './utils';
+import SlideSelector from './slide-selector.js';
+import AspectRatioSelector from './aspect-ratio-selector.js';
+import { getLibraryDependencyVersion, hotspotParams, t } from './utils.js';
 import {
   alterDisplayAsButtonSemantics,
   alterDisplayAsHotspotSemantics,
   alterHotspotGotoSemantics
-} from './semantics-utils';
-import { ASM_TASK_BUTTONS_ID, createActiveSurfaceModeAnswerButtons } from './active-surface-mode-utils';
+} from './semantics-utils.js';
+import { ASM_TASK_BUTTONS_ID, createActiveSurfaceModeAnswerButtons } from './active-surface-mode-utils.js';
 
 /*global H5P,ns*/
 var H5PEditor = window.H5PEditor || {};
 
 /**
  * Create a field for the form.
- *
  * @param {mixed} parent
- * @param {Object} field
+ * @param {object} field
  * @param {mixed} params
  * @param {function} setValue
  * @returns {H5PEditor.Text}
@@ -55,17 +54,18 @@ H5PEditor.NDLAInteractiveBoard = function (parent, field, params, setValue) {
   parent.ready(() => {
     if (isNewPresentation) {
       const aspectRatioSelector = new AspectRatioSelector([{
-          ratio: "4-3",
-          label: t('aspectRatioLandscape'),
-        },
-        {
-          ratio: "3-4",
-          label: t('aspectRatioPortrait'),
-        },
+        ratio: '4-3',
+        label: t('aspectRatioLandscape'),
+      },
+      {
+        ratio: '3-4',
+        label: t('aspectRatioPortrait'),
+      },
       ], (newRatio) => this.setRatio(newRatio.ratio));
 
       aspectRatioSelector.show();
-    } else {
+    }
+    else {
       this.updateSlideRatio(this.cp.defaultAspectRatio);
     }
 
@@ -109,7 +109,6 @@ H5PEditor.NDLAInteractiveBoard.clipboardKey = 'H5PEditor.NDLAInteractiveBoard';
 
 /**
  * Will change the size of all elements using the given ratio.
- *
  * @param {number} heightRatio
  */
 H5PEditor.NDLAInteractiveBoard.prototype.updateElementSizes = function (heightRatio) {
@@ -118,14 +117,14 @@ H5PEditor.NDLAInteractiveBoard.prototype.updateElementSizes = function (heightRa
   // Go through all slides
   for (let i = 0; i < this.params.slides.length; i++) {
     const slide = this.params.slides[i];
-    
+
     const noElementsInSlide = !slide.elements || slide.elements.length < 1;
     if (noElementsInSlide) {
       continue;
     }
 
     const $slideElements = $slides.eq(i).children();
-    
+
     for (let j = 0; j < slide.elements.length; j++) {
       const element = slide.elements[j];
 
@@ -145,26 +144,23 @@ H5PEditor.NDLAInteractiveBoard.prototype.updateElementSizes = function (heightRa
 /**
  * Compute true slide aspect ratio,
  * based on set aspect ratio and footer height
- * 
  * @param {number} currentSlideIndex
- * 
  * @returns {number}
  */
 H5PEditor.NDLAInteractiveBoard.prototype.getTrueSlideAspectRatio = function (currentSlideIndex) {
-  const $slideElement = this.cp.$wrapper.find(".h5p-slide");
+  const $slideElement = this.cp.$wrapper.find('.h5p-slide');
 
   const { width, height } = $slideElement.get(currentSlideIndex).getBoundingClientRect();
 
   return width / height;
-}
+};
 
 /**
  * Get element's default aspect ratio, based on library name
- * 
- * @param {string} libraryName 
+ * @param {string} libraryName
  * @returns {number}
  */
-H5PEditor.NDLAInteractiveBoard.prototype.getDefaultElementAspectRatio = function(libraryName) {
+H5PEditor.NDLAInteractiveBoard.prototype.getDefaultElementAspectRatio = function (libraryName) {
   let elementAspectRatio = 4 / 3;
   switch (libraryName) {
     case 'H5P.Audio':
@@ -172,13 +168,12 @@ H5PEditor.NDLAInteractiveBoard.prototype.getDefaultElementAspectRatio = function
       elementAspectRatio = 1 / 1;
       break;
   }
-  
+
   return elementAspectRatio;
-}
+};
 
 /**
  * Add an element to the current slide and params.
- *
  * @param {string|object} library Content type or parameters
  * @param {object} [options] Override the default options
  * @param {object} [instanceParameters] Override the default instance parameters
@@ -187,11 +182,12 @@ H5PEditor.NDLAInteractiveBoard.prototype.getDefaultElementAspectRatio = function
 H5PEditor.NDLAInteractiveBoard.prototype.addElement = function (library, options = {}, instanceParameters = {}) {
   let elementParams;
   let libraryName;
-  
+
   if (!(library instanceof String || typeof library === 'string')) {
     elementParams = library;
     libraryName = library.action.library.split(' ')[0];
-  } else {
+  }
+  else {
     libraryName = library.split(' ')[0];
   }
 
@@ -236,15 +232,16 @@ H5PEditor.NDLAInteractiveBoard.prototype.addElement = function (library, options
       }
     }
 
-    const isAnswerHotspot = ["yes-button", "no-button", "summary-page-button"].includes(options.id);
-    const isShape = libraryName === 'H5P.NDLAShape'
+    const isAnswerHotspot = ['yes-button', 'no-button', 'summary-page-button'].includes(options.id);
+    const isShape = libraryName === 'H5P.NDLAShape';
 
     const hasSizeOverride = options.width && options.height;
     if (hasSizeOverride && !options.displayAsButton) {
       // Use specified size
       elementParams.width = options.width;
       elementParams.height = options.height * trueAspectRatio;
-    } else if (!hasSizeOverride && (isAnswerHotspot || isShape)) {
+    }
+    else if (!hasSizeOverride && (isAnswerHotspot || isShape)) {
       const size = 30;
 
       elementParams.width = size;
@@ -264,7 +261,7 @@ H5PEditor.NDLAInteractiveBoard.prototype.addElement = function (library, options
     ...elementParams,
     ...instanceParameters,
   };
-  
+
   const slideParams = this.params.slides[slideIndex];
 
   elementParams.height = elementParams.height || elementParams.width * trueAspectRatio / elementAspectRatio;
@@ -304,7 +301,6 @@ H5PEditor.NDLAInteractiveBoard.prototype.addElement = function (library, options
 
 /**
  * Append field to wrapper.
- *
  * @param {type} $wrapper
  * @returns {undefined}
  */
@@ -320,7 +316,7 @@ H5PEditor.NDLAInteractiveBoard.prototype.appendTo = function ($wrapper) {
   if (presentationParams && presentationParams.override && presentationParams.override.activeSurface === true) {
     this.slideRatio = H5PEditor.NDLAInteractiveBoard.RATIO_SURFACE;
   }
-  this.cp = new H5P.NDLAInteractiveBoard(presentationParams, H5PEditor.contentId, {cpEditor: this});
+  this.cp = new H5P.NDLAInteractiveBoard(presentationParams, H5PEditor.contentId, { cpEditor: this });
   this.cp.attach(this.$editor);
   if (this.cp.$wrapper.is(':visible')) {
     this.cp.trigger('resize');
@@ -333,7 +329,7 @@ H5PEditor.NDLAInteractiveBoard.prototype.appendTo = function ($wrapper) {
 
   // Add drag and drop menu bar.
   this.initializeDNB(false);
-  
+
   // Find BG selector fields and init slide selector
   var globalBackgroundField = H5PEditor.NDLAInteractiveBoard.findField('globalBackgroundSelector', this.field.fields);
   var slideFields = H5PEditor.NDLAInteractiveBoard.findField('slides', this.field.fields);
@@ -345,8 +341,8 @@ H5PEditor.NDLAInteractiveBoard.prototype.appendTo = function ($wrapper) {
     $add: H5PEditor.$('<a href="#" aria-label="' + t('newSlide') + '" class="h5p-slidecontrols-button h5p-slidecontrols-button-add"></a>'),
     $clone: H5PEditor.$('<a href="#" aria-label="' + t('cloneSlide') + '" class="h5p-clone-slide h5p-slidecontrols-button h5p-slidecontrols-button-clone"></a>'),
     $background: H5PEditor.$('<a href="#" aria-label="' + t('backgroundSlide') + '" class="h5p-slidecontrols-button h5p-slidecontrols-button-background"></a>'),
-    $sortLeft: H5PEditor.$('<a href="#" aria-label="' + t('sortSlide', {':dir': 'left'}) + '" class="h5p-slidecontrols-button h5p-slidecontrols-button-sort-left"></a>'),
-    $sortRight: H5PEditor.$('<a href="#" aria-label="' + t('sortSlide', {':dir': 'right'}) + '" class="h5p-slidecontrols-button h5p-slidecontrols-button-sort-right"></a>'),
+    $sortLeft: H5PEditor.$('<a href="#" aria-label="' + t('sortSlide', { ':dir': 'left' }) + '" class="h5p-slidecontrols-button h5p-slidecontrols-button-sort-left"></a>'),
+    $sortRight: H5PEditor.$('<a href="#" aria-label="' + t('sortSlide', { ':dir': 'right' }) + '" class="h5p-slidecontrols-button h5p-slidecontrols-button-sort-right"></a>'),
     $delete: H5PEditor.$('<a href="#" aria-label="' + t('removeSlide') + '" class="h5p-slidecontrols-button h5p-slidecontrols-button-delete"></a>'),
   };
   this.slideControls = slideControls;
@@ -420,34 +416,31 @@ H5PEditor.NDLAInteractiveBoard.prototype.appendTo = function ($wrapper) {
 /**
  * Sets the given ratio to every slide in the course presentation.
  * Will also change the default aspect ratio that is used for new slides.
- *
  * @param {"4-3" | "3-4"} ratio
  */
 H5PEditor.NDLAInteractiveBoard.prototype.setRatio = function (ratio) {
-  this.cp.slides.forEach(slide => slide.aspectRatio = ratio);
+  this.cp.slides.forEach((slide) => slide.aspectRatio = ratio);
   this.cp.defaultAspectRatio = ratio;
   this.updateSlideRatio(ratio);
-  
+
   this.cp.resize();
-}
+};
 
 /**
  * Updates the slide ratio field
- *
  * @param {"4-3" | "3-4"} ratio
  */
-H5PEditor.NDLAInteractiveBoard.prototype.updateSlideRatio = function (ratio) {  
+H5PEditor.NDLAInteractiveBoard.prototype.updateSlideRatio = function (ratio) {
   if (!ratio) {
     return;
   }
-  
-  const [widthRatio, heightRatio] = ratio.split("-").map(num => parseInt(num));
+
+  const [widthRatio, heightRatio] = ratio.split('-').map((num) => parseInt(num));
   this.slideRatio = widthRatio / heightRatio;
-}
+};
 
 /**
  * Add Drag and Drop button group.
- *
  * @param {H5P.Library} library Library for which a button will be added.
  * @param {object} options Options.
  * @param {object} params Custom semantics params
@@ -459,21 +452,20 @@ H5PEditor.NDLAInteractiveBoard.prototype.createDNBButton = function (library, op
   return {
     id,
     title: (options.title === undefined) ? library.title : options.title,
-    createElement: () => 
+    createElement: () =>
       this.addElement(library.uberName, H5P.jQuery.extend(true, {}, options), params),
   };
 };
 
 /**
  * Add Drag and Drop button group.
- *
  * @param {H5P.Library} library Library for which a button will be added.
  * @param {object} groupData Data for the group.
  * @param {object} [options]
  * @param {string} [options.title]
  * @param {string} [options.titleGroup]
  * @param {string} [options.id]
- * @return {{
+ * @returns {{
  *   id: string;
  *   title: string;
  *   titleGroup: string;
@@ -502,7 +494,7 @@ H5PEditor.NDLAInteractiveBoard.prototype.createDNBButtonGroup = function (librar
           params: button.params || {},
         },
       };
-  
+
       return this.createDNBButton(library, options, button.params);
     }),
   };
@@ -520,13 +512,14 @@ H5PEditor.NDLAInteractiveBoard.prototype.setContainerEm = function (containerEm)
 
 /**
  * Initialize the drag and drop menu bar.
+ * @param forceReinitialize
  */
 H5PEditor.NDLAInteractiveBoard.prototype.initializeDNB = function (forceReinitialize) {
   const that = this;
-  
+
   const existingDragNBar = document.querySelector('.h5p-dragnbar');
   const hasBeenInitialized = !!existingDragNBar;
-  
+
   if (hasBeenInitialized) {
     if (forceReinitialize) {
       existingDragNBar.parentElement.removeChild(existingDragNBar);
@@ -535,7 +528,7 @@ H5PEditor.NDLAInteractiveBoard.prototype.initializeDNB = function (forceReinitia
       return;
     }
   }
-  
+
   this.$bar = H5PEditor.$('<div class="h5p-dragnbar">' + t('loading') + '</div>').insertBefore(this.cp.$boxWrapper);
   const slides = H5PEditor.NDLAInteractiveBoard.findField('slides', this.field.fields);
   const elementFields = H5PEditor.NDLAInteractiveBoard.findField('elements', slides.field.fields).field.fields;
@@ -759,27 +752,27 @@ H5PEditor.NDLAInteractiveBoard.prototype.initializeDNB = function (forceReinitia
         id: 'gotoslide',
         title: t('goToSlide'),
         createElement: () => this.addElement(
-            `H5P.NDLAShape ${this.getShapeLibraryVersion()}`,
-            undefined, 
-            {
-              ...hotspotParams,
-            },
-          ),
+          `H5P.NDLAShape ${this.getShapeLibraryVersion()}`,
+          undefined,
+          {
+            ...hotspotParams,
+          },
+        ),
       });
     }
 
 
-    let h5pShapeLib = libraries.find(library => library.name === "H5P.NDLAShape");
-    if(h5pShapeLib === undefined){
+    let h5pShapeLib = libraries.find((library) => library.name === 'H5P.NDLAShape');
+    if (h5pShapeLib === undefined) {
       h5pShapeLib = {
-        uberName: "H5P.NDLAShape 1.1",
-        name: "H5P.NDLAShape",
-        title: "Shape", 
+        uberName: 'H5P.NDLAShape 1.1',
+        name: 'H5P.NDLAShape',
+        title: 'Shape',
         majorVersion: 1,
         minorVersion: 1,
         runnable: 0,
         restricted: false,
-        tutorialUrl: null, 
+        tutorialUrl: null,
         metadataSettings: {}
       };
     }
@@ -800,7 +793,7 @@ H5PEditor.NDLAInteractiveBoard.prototype.initializeDNB = function (forceReinitia
       ),
     );
 
-    this.dnb = new H5P.NDLADragNBar(buttons, this.cp.$current, this.$editor, {$blurHandlers: this.cp.$boxWrapper, libraries: libraries});
+    this.dnb = new H5P.NDLADragNBar(buttons, this.cp.$current, this.$editor, { $blurHandlers: this.cp.$boxWrapper, libraries: libraries });
 
     this.$dnbContainer = this.cp.$current;
     this.dnb.dnr.snap = 10;
@@ -871,11 +864,11 @@ H5PEditor.NDLAInteractiveBoard.prototype.initializeDNB = function (forceReinitia
       const newWidthAbsolute = (parseFloat(newWidth) / 100) * that.cp.$current.innerWidth();
       const newHeightAbsolute = (parseFloat(newHeight) / 100) * that.cp.$current.innerHeight();
       const isVideo = params.action && params.action.library.split(' ')[0] === 'H5P.Video';
-      if(isVideo) {
+      if (isVideo) {
         const $videoElement = $element.find('.h5p-video').children();
         $videoElement
-          .css({width: newWidthAbsolute + 'px', height: newHeightAbsolute + 'px'})
-        
+          .css({ width: newWidthAbsolute + 'px', height: newHeightAbsolute + 'px' });
+
         const iFrame = $videoElement.find('iframe');
         iFrame.attr('width', newWidthAbsolute).attr('height', newHeightAbsolute);
       }
@@ -1001,7 +994,7 @@ H5PEditor.NDLAInteractiveBoard.prototype.initializeDNB = function (forceReinitia
   });
 };
 
-H5PEditor.NDLAInteractiveBoard.prototype.getShapeLibraryVersion = function() {
+H5PEditor.NDLAInteractiveBoard.prototype.getShapeLibraryVersion = function () {
   this._shapeLibVersion = this._shapeLibVersion || getLibraryDependencyVersion('H5P.NDLAShape');
   const shapeLibNotLoaded = !this._shapeLibVersion;
   if (shapeLibNotLoaded) {
@@ -1037,9 +1030,8 @@ H5PEditor.NDLAInteractiveBoard.prototype.activateActiveSurfaceMode = function ()
 
 /**
  * Check if the clipboard can be pasted into CP.
- *
- * @param {Object} [clipboard] Clipboard data.
- * @return {boolean} True, if clipboard can be pasted.
+ * @param {object} [clipboard] Clipboard data.
+ * @returns {boolean} True, if clipboard can be pasted.
  */
 H5PEditor.NDLAInteractiveBoard.prototype.canPaste = function (clipboard) {
   if (clipboard) {
@@ -1127,7 +1119,6 @@ H5PEditor.NDLAInteractiveBoard.prototype.remove = function () {
 
 /**
  * Initialize keyword interactions.
- *
  * @returns {undefined} Nothing
  */
 H5PEditor.NDLAInteractiveBoard.prototype.initKeywordInteractions = function () {
@@ -1224,12 +1215,12 @@ H5PEditor.NDLAInteractiveBoard.prototype.initKeywordInteractions = function () {
       that.params.keywordListAutoHide = false;
       that.$bar.find('.h5p-keywords-hide input')
         .attr('checked', false)
-        .attr("disabled", true)
+        .attr('disabled', true)
         .parent().addClass('h5p-disabled');
     }
     else {
       that.$bar.find('.h5p-keywords-hide input')
-        .attr("disabled", false)
+        .attr('disabled', false)
         .parent().removeClass('h5p-disabled');
     }
 
@@ -1274,9 +1265,8 @@ H5PEditor.NDLAInteractiveBoard.prototype.initKeywordInteractions = function () {
 
   /**
    * Help set default values if undefined.
-   *
    * @private
-   * @param {String} option
+   * @param {string} option
    * @param {*} defaultValue
    */
   var checkDefault = function (option, defaultValue) {
@@ -1319,7 +1309,6 @@ H5PEditor.NDLAInteractiveBoard.prototype.initKeywordMenu = function () {
 
 /**
  * Adds slide after current slide.
- *
  * @param {object} slideParams
  * @returns {undefined} Nothing
  */
@@ -1357,13 +1346,14 @@ H5PEditor.NDLAInteractiveBoard.prototype.addSlide = function (slideParams) {
   this.cp.nextSlide();
 };
 
-/** 
+/**
  * Update slides with solutions.
+ * @param index
  */
 H5PEditor.NDLAInteractiveBoard.prototype.updateNavigationLine = function (index) {
   const hasSolutionArray = this.cp.slides.map((instanceArray, slideIndex) => {
     const slideElements = this.cp.elementInstances[slideIndex];
-    
+
     const isTaskWithSolution =
       slideElements &&
       slideElements.some((elementInstance) =>
@@ -1381,8 +1371,7 @@ H5PEditor.NDLAInteractiveBoard.prototype.updateNavigationLine = function (index)
 
 /**
  * Remove the current slide
- *
- * @returns {Boolean} Indicates success
+ * @returns {boolean} Indicates success
  */
 H5PEditor.NDLAInteractiveBoard.prototype.removeSlide = function () {
   var index = this.cp.$current.index();
@@ -1440,7 +1429,6 @@ H5PEditor.NDLAInteractiveBoard.prototype.removeSlide = function () {
 
 /**
  * Animate navigation line slide icons when the slides are sorted
- *
  * @param {number} direction 1 for next, -1 for prev.
  */
 H5PEditor.NDLAInteractiveBoard.prototype.animateNavigationLine = function (direction) {
@@ -1449,7 +1437,7 @@ H5PEditor.NDLAInteractiveBoard.prototype.animateNavigationLine = function (direc
   var $selectedProgressPart = that.cp.$progressbar.find('.h5p-progressbar-part-selected');
   $selectedProgressPart.css('transform', 'translateX(' + (-100 * direction) + '%)');
 
-  var $selectedNext = (direction == 1 ? $selectedProgressPart.prev() : $selectedProgressPart.next());
+  var $selectedNext = (direction === 1 ? $selectedProgressPart.prev() : $selectedProgressPart.next());
   $selectedNext.css('transform', 'translateX(' + (100 * direction) + '%)');
 
   setTimeout(function () { // Next tick triggers animation
@@ -1488,7 +1476,7 @@ H5PEditor.NDLAInteractiveBoard.prototype.updateSlidesSidebar = function () {
       $editIcon.siblings('textarea').select();
       return false;
     }).keydown(function (event) {
-      if ([13,32].indexOf(event.which) !== -1) {
+      if ([13, 32].indexOf(event.which) !== -1) {
         H5PEditor.$(this).click();
         return false;
       }
@@ -1519,10 +1507,9 @@ H5PEditor.NDLAInteractiveBoard.prototype.updateSlidesSidebar = function () {
 
 /**
  * Sort current slide in the given direction.
- *
  * @param {H5PEditor.$} $element The next/prev slide.
  * @param {int} direction 1 for next, -1 for prev.
- * @returns {Boolean} Indicates success.
+ * @returns {boolean} Indicates success.
  */
 H5PEditor.NDLAInteractiveBoard.prototype.sortSlide = function ($element, direction) {
   if (!$element.length) {
@@ -1559,7 +1546,7 @@ H5PEditor.NDLAInteractiveBoard.prototype.sortSlide = function ($element, directi
   this.cp.jumpToSlide(newIndex);
 
   // Need to inform exportable text area about the change:
-  H5P.ExportableTextArea.CPInterface.changeSlideIndex(direction > 0 ? index : index-1, direction > 0 ? index+1 : index);
+  H5P.ExportableTextArea.CPInterface.changeSlideIndex(direction > 0 ? index : index - 1, direction > 0 ? index + 1 : index);
 
   // Update params.
   this.swapCollectionIndex(this.params.slides, index, newIndex);
@@ -1580,7 +1567,6 @@ H5PEditor.NDLAInteractiveBoard.prototype.sortSlide = function ($element, directi
 
 /**
  * Swap indexes in array, useful when sorting
- *
  * @param {Array} collection The collection we'll swap indexes in
  * @param {number} firstIndex First index that will be swapped
  * @param {number} secondIndex Second index that will be swapped
@@ -1593,7 +1579,6 @@ H5PEditor.NDLAInteractiveBoard.prototype.swapCollectionIndex = function (collect
 
 /**
  * Swaps the [data-index] values of two elements
- *
  * @param {jQuery} $current
  * @param {jQuery} $other
  */
@@ -1606,7 +1591,6 @@ H5PEditor.NDLAInteractiveBoard.prototype.swapIndexes = function ($current, $othe
 
 /**
  * Edit keyword.
- *
  * @param {H5PEditor.$} $span Keyword wrapper.
  * @returns {unresolved} Nothing
  */
@@ -1652,7 +1636,7 @@ H5PEditor.NDLAInteractiveBoard.prototype.editKeyword = function ($span) {
 
         // Remove textarea
         $li.removeClass('h5p-editing');
-        $span.css({'display': 'inline-block'});
+        $span.css({ 'display': 'inline-block' });
         $textarea.add($delete).remove();
       }
     }).focus();
@@ -1664,7 +1648,7 @@ H5PEditor.NDLAInteractiveBoard.prototype.editKeyword = function ($span) {
     $textarea.val(oldTitle).blur();
     H5PEditor.$('[role="menuitem"].h5p-current').focus();
   }).keydown(function (e) {
-    if ([32,13].indexOf(e.which) !== -1) {
+    if ([32, 13].indexOf(e.which) !== -1) {
       H5PEditor.$(this).click();
       return false;
     }
@@ -1681,7 +1665,6 @@ H5PEditor.NDLAInteractiveBoard.prototype.editKeyword = function ($span) {
 
 /**
  * Updates the configs with the new keyword
- *
  * @param {string} keyword
  * @param {number} slideIndex
  * @param {string} oldTitle
@@ -1718,10 +1701,9 @@ H5PEditor.NDLAInteractiveBoard.prototype.updateKeyword = function (keyword, slid
 
 /**
  * Generate element form.
- *
- * @param {Object} elementParams
- * @param {String} type
- * @returns {Object}
+ * @param {object} elementParams
+ * @param {string} type
+ * @returns {object}
  */
 H5PEditor.NDLAInteractiveBoard.prototype.generateForm = function (elementParams, type) {
   var self = this;
@@ -1744,7 +1726,8 @@ H5PEditor.NDLAInteractiveBoard.prototype.generateForm = function (elementParams,
   if (type === 'goToSlide') {
     // Hide all others
     this.showFields(elementFields, ['title', 'goToSlide', 'goToSlideType', 'invisible']);
-  } else if (isAnswerHotspot) {
+  }
+  else if (isAnswerHotspot) {
     this.hideFields(
       elementFields,
       [
@@ -1756,7 +1739,7 @@ H5PEditor.NDLAInteractiveBoard.prototype.generateForm = function (elementParams,
         'buttonColor',
         'useButtonIcon',
         'buttonIcon',
-    ]);
+      ]);
   }
   else {
     var hideFields = [];
@@ -1766,7 +1749,7 @@ H5PEditor.NDLAInteractiveBoard.prototype.generateForm = function (elementParams,
       hideFields.push('displayAsButton');
       hideFields.push('buttonSize');
     }
-    else if (type === "H5P.NDLAShape") {
+    else if (type === 'H5P.NDLAShape') {
       hideFields.push(
         'solution',
         'alwaysDisplayComments',
@@ -1803,12 +1786,12 @@ H5PEditor.NDLAInteractiveBoard.prototype.generateForm = function (elementParams,
   alterDisplayAsButtonSemantics(element, ns.$);
   alterDisplayAsHotspotSemantics(element, ns.$);
   alterHotspotGotoSemantics(element, ns.$);
-  
-  if (type === "H5P.NDLAShape") {
+
+  if (type === 'H5P.NDLAShape') {
     element.$form.find('.field-name-showAsHotspot').each(function () { // TODO: Use showWhen in semantics.json instead…
       var buttonIconSelectField = ns.$(this).parent().find('.field-name-showAsHotspot');
-  
-        buttonIconSelectField.removeClass("h5p-hidden2");
+
+      buttonIconSelectField.removeClass('h5p-hidden2');
 
     });
   }
@@ -1816,16 +1799,16 @@ H5PEditor.NDLAInteractiveBoard.prototype.generateForm = function (elementParams,
   element.$form.find('.field-name-useButtonIcon').each(function () { // TODO: Use showWhen in semantics.json instead…
     var buttonIconSelectField = ns.$(this).parent().find('.field-name-buttonIcon');
 
-    if (!ns.$(this).find("input")[0].checked) {
-      buttonIconSelectField.addClass("h5p-hidden2");
+    if (!ns.$(this).find('input')[0].checked) {
+      buttonIconSelectField.addClass('h5p-hidden2');
     }
 
-    ns.$(this).find("input").change(function (e) {
+    ns.$(this).find('input').change(function (e) {
       if (e.target.checked) {
-        buttonIconSelectField.removeClass("h5p-hidden2");
+        buttonIconSelectField.removeClass('h5p-hidden2');
       }
       else {
-        buttonIconSelectField.addClass("h5p-hidden2");
+        buttonIconSelectField.addClass('h5p-hidden2');
       }
     });
   });
@@ -1839,7 +1822,8 @@ H5PEditor.NDLAInteractiveBoard.prototype.generateForm = function (elementParams,
         library.children[0].changes.push(function (params) {
           self.setImageSize(element, elementParams, params);
         });
-      } else if (library.children[0].field.type === 'video') {
+      }
+      else if (library.children[0].field.type === 'video') {
         library.children[0].changes.push(function (params) {
           self.setVideoSize(elementParams, params);
         });
@@ -1870,7 +1854,6 @@ H5PEditor.NDLAInteractiveBoard.prototype.generateForm = function (elementParams,
 
 /**
  * Help set size for new images and keep aspect ratio.
- *
  * @param {object} element
  * @param {object} elementParams
  * @param {object} fileParams
@@ -1888,11 +1871,11 @@ H5PEditor.NDLAInteractiveBoard.prototype.setImageSize = function (element, eleme
   var fileRatio = fileParams.width / fileParams.height;
 
   // Use minSize
-  if (fileParams.width < minSize){
+  if (fileParams.width < minSize) {
     fileParams.height = minSize * fileRatio;
   }
 
-  if (fileParams.height < minSize){
+  if (fileParams.height < minSize) {
     fileParams.height = minSize;
   }
 
@@ -1905,29 +1888,28 @@ H5PEditor.NDLAInteractiveBoard.prototype.setImageSize = function (element, eleme
   // Calculate new width
   elementParams.width = elementParams.height * fileRatio;
 
-  if(elementParams.width > element.$wrapper.innerWidth()){
+  if (elementParams.width > element.$wrapper.innerWidth()) {
     elementParams.height = (element.$wrapper.innerWidth() * elementParams.height) / elementParams.width;
     elementParams.width = element.$wrapper.innerWidth();
   }
 
-  if(elementParams.height > element.$wrapper.innerHeight()){
+  if (elementParams.height > element.$wrapper.innerHeight()) {
     elementParams.width = (element.$wrapper.innerHeight() * elementParams.width) / elementParams.height;
     elementParams.height = element.$wrapper.innerHeight();
   }
-  
+
   elementParams.width = (elementParams.width / element.$wrapper.innerWidth()) * 100;
   elementParams.height = (elementParams.height / element.$wrapper.innerHeight()) * 100;
 };
 
 /**
  * Help set size for new videos and keep aspect ratio.
- *
  * @param {object} element
  * @param {object} elementParams
  * @param {object} fileParams
  */
 H5PEditor.NDLAInteractiveBoard.prototype.setVideoSize = function (elementParams, fileParams) {
-  if( fileParams === undefined){
+  if ( fileParams === undefined) {
     return;
   }
   if (fileParams.hasOwnProperty('aspectRatio') !== true) {
@@ -1942,9 +1924,8 @@ H5PEditor.NDLAInteractiveBoard.prototype.setVideoSize = function (elementParams,
 
 /**
  * Hide all fields in the given list. All others are shown.
- *
- * @param {Object[]} elementFields
- * @param {String[]} fields
+ * @param {object[]} elementFields
+ * @param {string[]} fields
  */
 H5PEditor.NDLAInteractiveBoard.prototype.hideFields = function (elementFields, fields) {
   // Find and hide fields in list
@@ -1958,9 +1939,8 @@ H5PEditor.NDLAInteractiveBoard.prototype.hideFields = function (elementFields, f
 
 /**
  * Show all fields in the given list. All others are hidden.
- *
- * @param {Object[]} elementFields
- * @param {String[]} fields
+ * @param {object[]} elementFields
+ * @param {string[]} fields
  */
 H5PEditor.NDLAInteractiveBoard.prototype.showFields = function (elementFields, fields) {
   // Find and hide all fields not in list
@@ -1982,11 +1962,11 @@ H5PEditor.NDLAInteractiveBoard.prototype.showFields = function (elementFields, f
 };
 
 /**
-* Find the title for the given library.
-*
-* @param {String} type Library name
-* @param {Function} next Called when we've found the title
-*/
+ * Find the title for the given library.
+ * @param {string} type Library name
+ * @param library
+ * @param {function} next Called when we've found the title
+ */
 H5PEditor.NDLAInteractiveBoard.prototype.findLibraryTitle = function (library, next) {
   var self = this;
 
@@ -2011,11 +1991,10 @@ H5PEditor.NDLAInteractiveBoard.prototype.findLibraryTitle = function (library, n
 
 /**
  * Callback used by CP when a new element is added.
- *
- * @param {Object} elementParams
+ * @param {object} elementParams
  * @param {jQuery} $wrapper
- * @param {Number} slideIndex
- * @param {Object} elementInstance
+ * @param {number} slideIndex
+ * @param {object} elementInstance
  * @returns {undefined}
  */
 H5PEditor.NDLAInteractiveBoard.prototype.processElement = function (elementParams, $wrapper, slideIndex, elementInstance) {
@@ -2097,9 +2076,8 @@ H5PEditor.NDLAInteractiveBoard.prototype.processElement = function (elementParam
 
 /**
  * Make sure element can be moved and stop moving while resizing.
- *
- * @param {Object} element
- * @param {Object} elementParams
+ * @param {object} element
+ * @param {object} elementParams
  * @returns {H5P.NDLADragNBarElement}
  */
 H5PEditor.NDLAInteractiveBoard.prototype.addToDragNBar = function (element, elementParams) {
@@ -2115,11 +2093,11 @@ H5PEditor.NDLAInteractiveBoard.prototype.addToDragNBar = function (element, elem
 
   if (type === 'H5P.NDLAShape') {
     options.minSize = 3;
-    if (elementParams.action.params.type == 'vertical-line') {
-      options.directionLock = "vertical";
+    if (elementParams.action.params.type === 'vertical-line') {
+      options.directionLock = 'vertical';
     }
-    else if (elementParams.action.params.type == 'horizontal-line') {
-      options.directionLock = "horizontal";
+    else if (elementParams.action.params.type === 'horizontal-line') {
+      options.directionLock = 'horizontal';
     }
   }
 
@@ -2199,10 +2177,9 @@ H5PEditor.NDLAInteractiveBoard.prototype.addToDragNBar = function (element, elem
 
 /**
  * Removes element from slide.
- *
- * @param {Object} element
+ * @param {object} element
  * @param {jQuery} $wrapper
- * @param {Boolean} isContinuousText
+ * @param {boolean} isContinuousText
  * @returns {undefined}
  */
 H5PEditor.NDLAInteractiveBoard.prototype.removeElement = function (element, $wrapper, isContinuousText) {
@@ -2250,10 +2227,10 @@ H5PEditor.NDLAInteractiveBoard.prototype.removeElement = function (element, $wra
 
 /**
  * Displays the given form in a popup.
- *
  * @param {jQuery} $form
  * @param {jQuery} $wrapper
  * @param {object} element Params
+ * @param elementParams
  * @returns {undefined}
  */
 H5PEditor.NDLAInteractiveBoard.prototype.showElementForm = function (element, $wrapper, elementParams) {
@@ -2280,6 +2257,7 @@ H5PEditor.NDLAInteractiveBoard.prototype.showElementForm = function (element, $w
 
   /**
    * The user has clicked delete, remove the element.
+   * @param e
    * @private
    */
   const handleFormremove = (e) => {
@@ -2331,14 +2309,14 @@ H5PEditor.NDLAInteractiveBoard.prototype.showElementForm = function (element, $w
             elementParams.height = elementParams.width * (1 / imageAspectRatio) * trueSlideAspectRatio;
           }
         }
-        if(isImage) {
+        if (isImage) {
           const containerStyle = window.getComputedStyle(this.dnb.$container[0]);
           const containerWidth = parseFloat(containerStyle.width);
           const containerHeight = parseFloat(containerStyle.height);
           const imageAspectRatio = elementParams.action.params.file && (elementParams.action.params.file.width / elementParams.action.params.file.height);
-          if(imageAspectRatio){
-            if(elementParams.action.params.file.width < containerWidth * this.defaultElementWidthOfContainerInPercent/100) {
-              if(elementParams.width == this.defaultElementWidthOfContainerInPercent) {
+          if (imageAspectRatio) {
+            if (elementParams.action.params.file.width < containerWidth * this.defaultElementWidthOfContainerInPercent / 100) {
+              if (elementParams.width === this.defaultElementWidthOfContainerInPercent) {
                 const initialImageWidthPercent = (elementParams.action.params.file.width / containerWidth) * 100;
                 const initialImageHeightPercent = (elementParams.action.params.file.height / containerHeight) * 100;
                 elementParams.width = initialImageWidthPercent;
@@ -2348,10 +2326,10 @@ H5PEditor.NDLAInteractiveBoard.prototype.showElementForm = function (element, $w
           }
         }
         const isAdvancedText = machineName === 'H5P.AdvancedText';
-        if(isAdvancedText) {
-          if(elementParams.width == this.defaultElementWidthOfContainerInPercent) {
+        if (isAdvancedText) {
+          if (elementParams.width === this.defaultElementWidthOfContainerInPercent) {
             const text = elementParams.action.params.text;
-            if(text !== undefined) {
+            if (text !== undefined) {
               const lengthText = text.length;
               const numberOfParagraphs = text.split('<p>').length - 1;
               const numberOfListElements = text.split('<li>').length - 1;
@@ -2360,35 +2338,35 @@ H5PEditor.NDLAInteractiveBoard.prototype.showElementForm = function (element, $w
               const shortTextLength = 150;
               const longTextLength = 300;
 
-              if(numberOfParagraphs + numberOfListElements == 1 && lengthText < shortTextLength) {
+              if (numberOfParagraphs + numberOfListElements === 1 && lengthText < shortTextLength) {
                 elementParams.width = this.defaultElementWidthOfContainerInPercent;
                 elementParams.height = (elementParams.width * trueSlideAspectRatio / elementAspectRatio) / 4;
               }
-              else if(numberOfParagraphs + numberOfListElements == 1 && lengthText >= shortTextLength && lengthText < longTextLength) {
+              else if (numberOfParagraphs + numberOfListElements === 1 && lengthText >= shortTextLength && lengthText < longTextLength) {
                 elementParams.width = this.defaultElementWidthOfContainerInPercent;
                 elementParams.height = (elementParams.width * trueSlideAspectRatio / elementAspectRatio) / 2;
               }
-              else if(numberOfParagraphs + numberOfListElements == 1 && lengthText >= longTextLength) {
+              else if (numberOfParagraphs + numberOfListElements === 1 && lengthText >= longTextLength) {
                 elementParams.width = this.defaultElementWidthOfContainerInPercent;
                 elementParams.height = (elementParams.width * trueSlideAspectRatio / elementAspectRatio);
               }
-              else if(numberOfParagraphs + numberOfListElements == 2 && lengthText < longTextLength ) {
+              else if (numberOfParagraphs + numberOfListElements === 2 && lengthText < longTextLength ) {
                 elementParams.width = this.defaultElementWidthOfContainerInPercent;
                 elementParams.height = (elementParams.width * trueSlideAspectRatio / elementAspectRatio) / 2;
               }
-              else if(numberOfParagraphs + numberOfListElements == 2 && lengthText >= longTextLength) {
+              else if (numberOfParagraphs + numberOfListElements === 2 && lengthText >= longTextLength) {
                 elementParams.width = this.defaultElementWidthOfContainerInPercent;
                 elementParams.height = (elementParams.width * trueSlideAspectRatio / elementAspectRatio);
               }
-              else if(numberOfParagraphs + numberOfListElements == 3 && lengthText < shortTextLength) {
+              else if (numberOfParagraphs + numberOfListElements === 3 && lengthText < shortTextLength) {
                 elementParams.width = this.defaultElementWidthOfContainerInPercent;
                 elementParams.height = (elementParams.width * trueSlideAspectRatio / elementAspectRatio) / 2;
               }
-              else if(numberOfParagraphs + numberOfListElements == 3 && lengthText >= shortTextLength) {
+              else if (numberOfParagraphs + numberOfListElements === 3 && lengthText >= shortTextLength) {
                 elementParams.width = this.defaultElementWidthOfContainerInPercent;
                 elementParams.height = (elementParams.width * trueSlideAspectRatio / elementAspectRatio);
               }
-              else if(numberOfParagraphs + numberOfListElements > 3) {
+              else if (numberOfParagraphs + numberOfListElements > 3) {
                 elementParams.width = this.defaultElementWidthOfContainerInPercent;
                 elementParams.height = (elementParams.width * trueSlideAspectRatio / elementAspectRatio);
               }
@@ -2400,38 +2378,14 @@ H5PEditor.NDLAInteractiveBoard.prototype.showElementForm = function (element, $w
     }
 
     this.dnb.preventPaste = false;
-  }
-  this.on('formdone', handleFormdone);
-
-  /**
-   * The form pane is fully displayed.
-   * @private
-   */
-  const handleFormopened = (event) => {
-    if (isLoaded) {
-      focusFirstField();
-    }
-  }
-  this.on('formopened', handleFormopened);
-
-  /**
-   * Remove event listeners on form close
-   * @private
-   */
-  const handleFormclose = () => {
-    this.off('formremove', handleFormremove);
-    this.off('formdone', handleFormdone);
-    this.off('formclose', handleFormclose);
-    this.off('formopened', handleFormopened);
   };
-  this.on('formclose', handleFormclose);
+  this.on('formdone', handleFormdone);
 
   const libraryField = H5PEditor.findField('action', element);
 
   /**
    * Focus the first field of the form.
    * Should be triggered when library is loaded + form is opened.
-   *
    * @private
    */
   var focusFirstField = () => {
@@ -2444,7 +2398,7 @@ H5PEditor.NDLAInteractiveBoard.prototype.showElementForm = function (element, $w
         .h5p-editor-dialog .h5peditor-text,
         .h5p-dialog-box .ckeditor,
         .h5p-dialog-box .h5peditor-text`
-        ,libraryField.$myField)
+      , libraryField.$myField)
       .eq(0)
       .focus();
   };
@@ -2462,6 +2416,30 @@ H5PEditor.NDLAInteractiveBoard.prototype.showElementForm = function (element, $w
   else {
     isLoaded = true;
   }
+
+  /**
+   * The form pane is fully displayed.
+   * @param event
+   * @private
+   */
+  const handleFormopened = (event) => {
+    if (isLoaded) {
+      focusFirstField();
+    }
+  };
+  this.on('formopened', handleFormopened);
+
+  /**
+   * Remove event listeners on form close
+   * @private
+   */
+  const handleFormclose = () => {
+    this.off('formremove', handleFormremove);
+    this.off('formdone', handleFormdone);
+    this.off('formclose', handleFormclose);
+    this.off('formopened', handleFormopened);
+  };
+  this.on('formclose', handleFormclose);
 
   let customTitle, customIconId;
   if (elementParams.action === undefined) {
@@ -2485,13 +2463,12 @@ H5PEditor.NDLAInteractiveBoard.prototype.showElementForm = function (element, $w
 };
 
 /**
-* Redraw element.
-*
-* @param {jQuery} $wrapper Element container to be redrawn.
-* @param {object} element Element data.
-* @param {object} elementParams Element parameters.
-* @param {number} [repeat] Counter for redrawing if necessary.
-*/
+ * Redraw element.
+ * @param {jQuery} $wrapper Element container to be redrawn.
+ * @param {object} element Element data.
+ * @param {object} elementParams Element parameters.
+ * @param {number} [repeat] Counter for redrawing if necessary.
+ */
 H5PEditor.NDLAInteractiveBoard.prototype.redrawElement = function ($wrapper, element, elementParams, repeat) {
   const elementIndex = $wrapper.index();
   const slideIndex = this.cp.$current.index();
@@ -2502,7 +2479,7 @@ H5PEditor.NDLAInteractiveBoard.prototype.redrawElement = function ($wrapper, ele
   // Determine how many elements still need redrawal after this one
   repeat = (typeof repeat === 'undefined') ? elements.length - 1 - elementIndex : repeat;
 
-  const isPieChart = elementParams.action 
+  const isPieChart = elementParams.action
     && elementParams.action.library.split(' ')[0] === 'H5P.NDLAChart'
     && elementParams.action.params.graphMode === 'pieChart';
   if (isPieChart) {
@@ -2558,9 +2535,8 @@ H5PEditor.NDLAInteractiveBoard.prototype.redrawElement = function ($wrapper, ele
  * Applies the updated position and size properties to the given element.
  *
  * All properties are converted to percentage.
- *
  * @param {H5P.jQuery} $element
- * @param {Object} elementParams
+ * @param {object} elementParams
  */
 H5PEditor.NDLAInteractiveBoard.prototype.fitElement = function ($element, elementParams) {
   const sizeNPosition = this.dnb.getElementSizeNPosition($element);
@@ -2594,12 +2570,11 @@ H5PEditor.NDLAInteractiveBoard.prototype.fitElement = function ($element, elemen
 };
 
 /**
-* Find ContinuousText elements.
-*
-* @param {Boolean} [firstOnly] Return first element only
-* @param {Boolean} [maxTwo] Return after two elements have been found
-* @returns {{Object[]|Object}}
-*/
+ * Find ContinuousText elements.
+ * @param {boolean} [firstOnly] Return first element only
+ * @param {boolean} [maxTwo] Return after two elements have been found
+ * @returns {{Object[]|Object}}
+ */
 H5PEditor.NDLAInteractiveBoard.prototype.getCTs = function (firstOnly, maxTwo) {
   var self = this;
 
@@ -2635,7 +2610,6 @@ H5PEditor.NDLAInteractiveBoard.prototype.getCTs = function (firstOnly, maxTwo) {
 
 /**
  * Collect functions to execute once the tree is complete.
- *
  * @param {function} ready
  * @returns {undefined}
  */
@@ -2650,10 +2624,9 @@ H5PEditor.NDLAInteractiveBoard.prototype.ready = function (ready) {
 
 /**
  * Look for field with the given name in the given collection.
- *
- * @param {String} name of field
+ * @param {string} name of field
  * @param {Array} fields collection to look in
- * @returns {Object} field object
+ * @returns {object} field object
  */
 H5PEditor.NDLAInteractiveBoard.findField = function (name, fields) {
   for (var i = 0; i < fields.length; i++) {
@@ -2663,7 +2636,7 @@ H5PEditor.NDLAInteractiveBoard.findField = function (name, fields) {
   }
 };
 
-/** @constant {Number} */
+/** @constant {number} */
 H5PEditor.NDLAInteractiveBoard.RATIO_SURFACE = 16 / 9;
 
 // Tell the editor what widget we are.

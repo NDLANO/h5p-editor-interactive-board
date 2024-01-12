@@ -78,7 +78,7 @@
 }
 
 .h5p-coursepresentation .h5p-slidecontrols-button:before {
-  font-family: 'H5PFontIcons';
+  font-family: 'H5PFontIcons', sans-serif;
   color: #494949;
 
   /* Better Font Rendering =========== */
@@ -105,7 +105,7 @@
 }
 
 .h5p-coursepresentation .h5p-keywordcontrols-button:after {
-  font-family: 'H5PFontAwesome4';
+  font-family: 'H5PFontAwesome4', sans-serif;
   content: "\f057";
   margin-left: 0.4em;
   color: #c33f62;
@@ -335,7 +335,7 @@
   font-size: 0.875em;
 }
 .h5p-add-keyword:before {
-  font-family: 'H5PFontAwesome4';
+  font-family: 'H5PFontAwesome4', sans-serif;
   content: "\f055";
   margin-right: 0.5em;
 }

@@ -12,24 +12,12 @@
   },
   "preloadedJs": [
     {
-      "path": "dist/cp-editor.js"
+      "path": "dist/h5p-editor-interactive-board.js"
     }
   ],
   "preloadedCss": [
     {
-      "path": "styles/cp-editor.css"
-    },
-    {
-      "path": "styles/slide-selector.css"
-    },
-    {
-      "path": "styles/bg-selector.css"
-    },
-    {
-      "path": "styles/aspect-ratio-selector.css"
-    },
-    {
-      "path": "styles/toolbar.css"
+      "path": "dist/h5p-editor-interactive-board.css"
     }
   ],
   "preloadedDependencies": [
@@ -86,7 +74,7 @@
     {
       "machineName": "H5P.Blanks",
       "majorVersion": 1,
-      "minorVersion": 12
+      "minorVersion": 14
     },
     {
       "machineName": "H5P.SingleChoiceSet",
@@ -96,12 +84,12 @@
     {
       "machineName": "H5P.MultiChoice",
       "majorVersion": 1,
-      "minorVersion": 14
+      "minorVersion": 16
     },
     {
       "machineName": "H5P.TrueFalse",
       "majorVersion": 1,
-      "minorVersion": 6
+      "minorVersion": 8
     },
     {
       "machineName": "H5P.Summary",
@@ -114,11 +102,6 @@
       "minorVersion": 3
     },
     {
-      "machineName": "H5P.NDLAInteractiveVideo",
-      "majorVersion": 1,
-      "minorVersion": 22
-    },
-    {
       "machineName": "H5P.NDLAInteractiveBoard",
       "majorVersion": 1,
       "minorVersion": 24
@@ -126,32 +109,27 @@
     {
       "machineName": "H5P.MarkTheWords",
       "majorVersion": 1,
-      "minorVersion": 9
+      "minorVersion": 11
     },
     {
       "machineName": "H5P.DragText",
       "majorVersion": 1,
-      "minorVersion": 8
-    },
-    {
-      "machineName": "H5P.TwitterUserFeed",
-      "majorVersion": 1,
-      "minorVersion": 0
+      "minorVersion": 10
     },
     {
       "machineName": "H5P.Dialogcards",
       "majorVersion": 1,
-      "minorVersion": 8
+      "minorVersion": 9
     },
     {
       "machineName": "H5PEditor.ColorSelector",
       "majorVersion": 1,
-      "minorVersion": 2
+      "minorVersion": 3
     },
     {
-      "machineName": "H5PEditor.NDLARadioSelector",
+      "machineName": "H5PEditor.ShowWhen",
       "majorVersion": 1,
-      "minorVersion": 2
+      "minorVersion": 0
     },
     {
       "machineName": "H5P.NDLAFontIcons",
@@ -162,11 +140,6 @@
       "machineName": "H5P.NDLAChart",
       "majorVersion": 1,
       "minorVersion": 2
-    },
-    {
-      "machineName": "H5PEditor.NDLAImageRadioGroup",
-      "majorVersion": 1,
-      "minorVersion": 0
     }
   ]
 }

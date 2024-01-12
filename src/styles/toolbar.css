@@ -5,7 +5,7 @@
   top: -1.5em;
   left: 0;
   width: 100%;
-  padding: 0 0.5em;
+  padding: 0 0.25rem;
   box-sizing: border-box;
   -moz-box-sizing: border-box;
 }
@@ -100,7 +100,7 @@
 }
 
 .h5p-dragnbar-a {
-  font-family: H5PCoursePresentation;
+  font-family: "H5PInteractiveBoard", sans-serif;
   color: #494949;
 }
 .h5p-dragnbar-a::before {
@@ -185,7 +185,7 @@
 .h5p-dragnbar-ndlashape-thumbs-up-button::before,
 .h5p-dragnbar-summary-page-button-button::before
  {
-  font-family: 'H5PFontAwesome4';
+  font-family: "H5PFontAwesome4", sans-serif;
   color: #494949;
   font-size: 1.1em;
   vertical-align: top;
@@ -208,7 +208,7 @@
 .h5p-dragnbar-yes-button-button::before,
 .h5p-dragnbar-no-button-button::before
  {
-  font-family: 'H5PFontIcons';
+  font-family: "H5PFontIcons", sans-serif;
   color: #494949;
   font-size: 1em;
   vertical-align: top;
@@ -290,7 +290,7 @@
   content: "\e603";
 }
 .h5p-dragnbar-truefalse-button::before {
-  font-family: 'H5PFontIcons';
+  font-family: "H5PFontIcons", sans-serif;
   content: "\e902";
 }
 .h5p-dragnbar-summary-button::before {
@@ -349,7 +349,7 @@
 }
 .h5p-dragnbar-no-button-button::before {
   content: "\e92a";
-} 
+}
 .h5p-dragnbar-summary-page-button-button::before {
   content: "\f005";
 }
@@ -429,7 +429,7 @@ ul:not(.h5p-dragnbar-li-ul) > .h5p-dragnbar-li > a.h5p-dragnbar-dialogcards-butt
   color: #4a4a4a;
 }
 .h5p-dragnbar-keywords::before {
-  font-family: 'H5PFontIcons';
+  font-family: "H5PFontIcons", sans-serif;
   content: '\e90b';
   margin-right: 0.25em;
   -webkit-font-smoothing: antialiased;
@@ -437,7 +437,7 @@ ul:not(.h5p-dragnbar-li-ul) > .h5p-dragnbar-li > a.h5p-dragnbar-dialogcards-butt
   position: relative;
 }
 .h5p-dragnbar-keywords:after {
-  font-family: 'h5p';
+  font-family: "h5p", sans-serif;
   content: '\e565';
   margin-left: 0.5em;
   vertical-align: middle;

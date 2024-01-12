@@ -42,7 +42,7 @@
 
 .h5p-background-selector-close:after {
   content: "\f057";
-  font-family: 'H5PFontAwesome4';
+  font-family: 'H5PFontAwesome4', sans-serif;
 }
 
 .h5p-radio-selector-values .field.h5p-color-selector {

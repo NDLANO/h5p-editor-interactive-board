@@ -1,4 +1,4 @@
-import { t } from './utils';
+import { t } from './utils.js';
 
 export default (function () {
   /**
@@ -7,29 +7,29 @@ export default (function () {
    */
   const html = String.raw;
 
-  /** 
+  /**
    * @typedef {object} Ratio
    * @property {string} ratio The ratio on the format 'width-height' (e.g. '4-3' for 4:3)
    * @property {string} label The illustration's label (e.g. "portrait", "landscape")
    */
 
-  /** 
+  /**
    * @typedef {object} RatioView
    * @property {"4-3" | "3-4"} ratio The ratio on the format 'width-height' (e.g. '4-3' for 4:3)
    * @property {string} label The illustration's label (e.g. "portrait", "landscape")
    */
 
   /**
-   * 
+   *
    */
   class AspectRatioSelector {
     /**
-     * 
+     *
      * @param {Ratio[]} ratios
      * @param {(ratio: RatioView) => void} onSubmit
      */
     constructor(ratios, onSubmit) {
-      this.availableRatios = ratios.map(ratio => this.ratioToRatioView(ratio));
+      this.availableRatios = ratios.map((ratio) => this.ratioToRatioView(ratio));
       this.selectedRatio = this.availableRatios[0];
       this.modal = this.createAspectRatioModal();
       this.onSubmit = onSubmit;
@@ -50,9 +50,8 @@ export default (function () {
 
     /**
      * Convert a Ratio object into a RatioView
-     * 
-     * @param {Ratio} ratio 
-     * @return {RatioView}
+     * @param {Ratio} ratio
+     * @returns {RatioView}
      */
     ratioToRatioView(ratio) {
       const [widthStr, heightStr] = ratio.ratio.split('-');
@@ -63,7 +62,7 @@ export default (function () {
       const malformedAspectRatio = Number.isNaN(width) || Number.isNaN(height) || width <= 0 || height <= 0;
       if (malformedAspectRatio) {
         // TODO: Should we throw an error instead of only logging it out?
-        console.error(`The ratio '${ratio.ratio}' is malformed. The ratio should be on the format 'width-height'.`)
+        console.error(`The ratio '${ratio.ratio}' is malformed. The ratio should be on the format 'width-height'.`);
       }
 
       return {
@@ -76,7 +75,7 @@ export default (function () {
      * @param {number} width The width part of the ratio equation. This is relative to the height, not absolute.
      * @param {number} height The height part of the ratio equation. This is relative to the width, not absolute.
      * @param {string} label The illustration's label (e.g. "portrait", "landscape")
-     * @return {string} The generated element as an HTML string
+     * @returns {string} The generated element as an HTML string
      */
     createRatioIllustration(width, height, label) {
       return html `
@@ -88,7 +87,7 @@ export default (function () {
     }
 
     /**
-     * 
+     *
      * @param {RatioView} ratioObj
      * @param {boolean} isChecked
      * @param {number} index
@@ -118,8 +117,8 @@ export default (function () {
     }
 
     /**
-     * 
-     * @param {RatioView} newRatio 
+     *
+     * @param {RatioView} newRatio
      */
     setRatio(newRatio) {
       this.selectedRatio = newRatio;
@@ -128,8 +127,7 @@ export default (function () {
     /**
      * Creates an aspect ratio modal.
      * The modal includes button to set the aspect ratio to either 4/3 or 3/4.
-     * 
-     * @return {HTMLDivElement}
+     * @returns {HTMLDivElement}
      */
     createAspectRatioModal() {
       const container = document.createElement('div');
