@@ -1,12 +1,11 @@
-import { t } from './utils';
+import { t } from './utils.js';
 
 export default (function ($, EventDispatcher) {
 
   /**
    * Create a Background Selector.
-   *
    * @class BackgroundSelector
-   * @extends H5P.EventDispatcher Allows pub/sub
+   * @augments H5P.EventDispatcher Allows pub/sub
    * @param {jQuery} $backgroundSlides Elements to paint
    * @param {boolean} [isSingleSlide] Background selector is for a single element
    */
@@ -59,7 +58,6 @@ export default (function ($, EventDispatcher) {
 
     /**
      * Get slide(s) that will be painted
-     *
      * @private
      * @returns {jQuery} Slide(s)
      */
@@ -98,23 +96,7 @@ export default (function ($, EventDispatcher) {
     };
 
     /**
-     * Add listener for when backgrounds are changed
-     * @private
-     */
-    var addOptionListeners = function () {
-      var radioSelector = getRadioSelector();
-      radioSelector.on('backgroundAdded', function () {
-        self.addBackground();
-      });
-
-      radioSelector.on('backgroundRemoved', function () {
-        removeBackground();
-      });
-    };
-
-    /**
      * Get processed Radio Selector instance
-     *
      * @private
      * @returns {H5PEditor.RadioSelector}
      */
@@ -144,6 +126,21 @@ export default (function ($, EventDispatcher) {
     };
 
     /**
+     * Add listener for when backgrounds are changed
+     * @private
+     */
+    var addOptionListeners = function () {
+      var radioSelector = getRadioSelector();
+      radioSelector.on('backgroundAdded', function () {
+        self.addBackground();
+      });
+
+      radioSelector.on('backgroundRemoved', function () {
+        removeBackground();
+      });
+    };
+
+    /**
      * Add background to slide(s) with current settings
      */
     self.addBackground = function () {
@@ -169,7 +166,7 @@ export default (function ($, EventDispatcher) {
 
 
     /**
-     * @typedef {Object} bgOptions Background options object
+     * @typedef {object} bgOptions Background options object
      * @property {boolean} [isSingle] Initialized for single slides
      * @property {boolean} [isVisible] Initialized as visible
      * @property {number} [index] Optional insert index
@@ -177,9 +174,8 @@ export default (function ($, EventDispatcher) {
 
     /**
      * Create a new background selector and add to collection
-     *
-     * @param {array|Object} fields Semantics for processing background selector
-     * @param {Object} params Parameters belonging to semantics
+     * @param {Array | object} fields Semantics for processing background selector
+     * @param {object} params Parameters belonging to semantics
      * @param {jQuery} $wrapper Element that we will append to
      * @param {bgOptions} [options] Additional background options
      */
@@ -217,7 +213,6 @@ export default (function ($, EventDispatcher) {
 
     /**
      * Add reset button for resetting background slides
-     *
      * @param {string} [text] Optional text for reset button
      * @returns {BackgroundSelector}
      */
@@ -248,7 +243,6 @@ export default (function ($, EventDispatcher) {
 
     /**
      * Set description at the top of the background selector
-     *
      * @param {string} description
      * @returns {BackgroundSelector}
      */
@@ -260,8 +254,7 @@ export default (function ($, EventDispatcher) {
 
     /**
      * Validate background selector.
-     *
-     * @returns {Boolean} Validity of inputs
+     * @returns {boolean} Validity of inputs
      */
     self.validate = function () {
       return getRadioSelector().validate();
@@ -276,7 +269,6 @@ export default (function ($, EventDispatcher) {
 
     /**
      * Set target elements for background operations
-     *
      * @param {jQuery} $newBackgroundSlides Target elements
      * @returns {BackgroundSelector}
      */
@@ -287,7 +279,6 @@ export default (function ($, EventDispatcher) {
 
     /**
      * Remove background selector element, used when deleting slides.
-     *
      * @returns {BackgroundSelector}
      */
     self.removeElement = function () {
@@ -299,7 +290,6 @@ export default (function ($, EventDispatcher) {
 
     /**
      * Update color picker in Radio Selector, used when changing slides.
-     *
      * @returns {BackgroundSelector}
      */
     self.updateColorPicker = function () {
@@ -316,7 +306,6 @@ export default (function ($, EventDispatcher) {
 
     /**
      * Set selected index in Radio Selector.
-     *
      * @param {number} index New index for Radio Selector
      * @returns {BackgroundSelector}
      */

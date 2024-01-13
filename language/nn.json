@@ -40,11 +40,6 @@
     "answerHotspotFalse": "Galt svar",
     "goToSummarySlide": "Gå til oppsummering",
     "expandBreadcrumbButtonLabel": "Gå tilbake",
-    "collapseBreadcrumbButtonLabel": "Lukk navigasjon",
-    "aspectRatioPortrait": "Ståande",
-    "aspectRatioLandscape": "Liggande",
-    "aspectRatioTitle": "Velg format for din presentasjon",
-    "aspectRatioSubtitle": "Formatet gjelder for alle skjermbilete. Formatet kan ikkje endrast i ettertid.",
-    "aspectRatioSubmit": "Lag presentasjon"
+    "collapseBreadcrumbButtonLabel": "Lukk navigasjon"
   }
 }

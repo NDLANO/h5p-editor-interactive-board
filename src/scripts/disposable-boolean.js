@@ -1,6 +1,6 @@
 /*global ns*/
 
-import { t } from './utils';
+import { t } from './utils.js';
 
 // Create a new editor widget for boolean fields
 ns.widgets.disposableBoolean = (function ($, EventDispatcher) {
@@ -8,7 +8,6 @@ ns.widgets.disposableBoolean = (function ($, EventDispatcher) {
   /**
    * A special boolean option that only can be used once.
    * Requires confirmation before checking it.
-   *
    * @class
    * @param {object} parent
    * @param {object} field
@@ -30,7 +29,6 @@ ns.widgets.disposableBoolean = (function ($, EventDispatcher) {
 
     /**
      * Build the DOM element string and then create the HTML.
-     *
      * @private
      * @returns {H5P.jQuery}
      */
@@ -61,7 +59,6 @@ ns.widgets.disposableBoolean = (function ($, EventDispatcher) {
 
     /**
      * Appends this fields elements to the given container.
-     *
      * @param {H5P.jQuery} $container
      */
     self.appendTo = function ($container) {
@@ -73,7 +70,6 @@ ns.widgets.disposableBoolean = (function ($, EventDispatcher) {
 
     /**
      * Checks to see if this fields value is valid.
-     *
      * @returns {boolean}
      */
     self.validate = function () {
