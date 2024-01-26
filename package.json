@@ -1,6 +1,6 @@
 {
   "name": "h5p-editor-interactive-board",
-  "version": "1.24.20",
+  "version": "1.24.21",
   "description": "H5P Editor Interactive Board ==========",
   "main": "index.js",
   "scripts": {
